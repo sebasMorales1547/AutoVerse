@@ -8,7 +8,8 @@ package CapaServicios;
  *
  * @author Familia
  */
-class PagoEfectivo implements MetodoPago {
+
+class PagoCredito implements MetodoPago {
     @Override
-    public void procesarPago(double monto) { System.out.println("Pago en efectivo: " + monto); }
+    public void procesarPago(double monto) { System.out.println("Cargo a tarjeta crédito: " + monto); }
 }
