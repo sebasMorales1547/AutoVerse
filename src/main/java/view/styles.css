@@ -231,3 +231,591 @@ body.register-page {
         padding: 24px 20px;
     }
 }
+
+
+/* =========================================
+   DASHBOARD – Catálogo de vehículos
+   ========================================= */
+
+body.dashboard-page {
+    background: #0d0d0d;
+    min-height: 100vh;
+    display: block;
+    font-family: 'Barlow', sans-serif;
+}
+
+/* ── Navbar ─────────────────────────────── */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    background: #141414;
+    border-bottom: 1px solid #222;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-logo {
+    height: 56px;
+    object-fit: contain;
+}
+
+.btn-cerrar {
+    color: #ffc400;
+    text-decoration: none;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+}
+.btn-cerrar:hover { color: #fff; }
+
+/* ── Sección de búsqueda ─────────────────── */
+.search-section {
+    padding: 24px 32px 16px;
+    background: #141414;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.search-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.search-wrap {
+    position: relative;
+    flex: 1;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #888;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    color: #111;
+    outline: none;
+}
+.search-input::placeholder { color: #888; }
+
+.btn-agregar {
+    padding: 12px 24px;
+    background: #ffc400;
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-agregar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,196,0,0.35);
+}
+
+.filters-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 9px 36px 9px 14px;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+/* ── Grid de tarjetas — máx 4 columnas ───── */
+.vehicles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 28px 32px;
+}
+
+/* ── Tarjeta ─────────────────────────────── */
+.vehicle-card {
+    background: #1a1a1a;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    animation: cardIn 0.4s ease both;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.vehicle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+    border-color: #ffc400;
+}
+
+.card-img-wrap {
+    width: 100%;
+    height: 150px;
+    background: #222;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.vehicle-card:hover .card-img-wrap img {
+    transform: scale(1.05);
+}
+
+.card-img-wrap.no-img::after {
+    content: "🚗";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    opacity: 0.2;
+}
+
+.card-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'Barlow', sans-serif;
+    letter-spacing: 0.05em;
+}
+
+.card-body {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-marca {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: capitalize;
+    margin-bottom: 2px;
+}
+
+.card-modelo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 6px;
+}
+
+.card-precio {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffc400;
+    margin-bottom: 10px;
+}
+
+.card-specs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.spec {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: #aaa;
+    font-weight: 500;
+}
+
+.spec svg {
+    width: 13px;
+    height: 13px;
+    color: #ffc400;
+    flex-shrink: 0;
+}
+
+.btn-detalles {
+    margin-top: auto;
+    width: 100%;
+    padding: 9px;
+    background: transparent;
+    border: 1px solid #ffc400;
+    border-radius: 8px;
+    color: #ffc400;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-detalles:hover {
+    background: #ffc400;
+    color: #111;
+    transform: none;
+}
+
+/* ── Estado vacío ───────────────────────── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 80px 20px;
+    color: #555;
+    font-size: 1rem;
+}
+.empty-state svg { width: 80px; height: 80px; opacity: 0.4; }
+
+/* ── Modal agregar ──────────────────────── */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+    background: #1e1e1e;
+    border-radius: 16px;
+    padding: 36px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid #2e2e2e;
+    animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.94) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal h2 {
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+    margin-bottom: 24px;
+}
+
+.modal-grid .full-width { grid-column: 1 / -1; }
+.modal .form-group { margin-bottom: 0; }
+
+.modal label {
+    font-size: 0.75rem;
+    color: #888;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.modal textarea { resize: vertical; }
+
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus {
+    border-color: #ffc400;
+    background: #303030;
+}
+
+.modal input::placeholder,
+.modal textarea::placeholder { color: #555; }
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancelar {
+    padding: 11px 24px;
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #888;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+}
+.btn-cancelar:hover { border-color: #888; color: #fff; transform: none; }
+
+.btn-guardar {
+    padding: 11px 28px;
+    background: #ffc400;
+    border: none;
+    border-radius: 8px;
+    color: #111;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: auto;
+}
+.btn-guardar:hover {
+    background: #ffd740;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255,196,0,0.35);
+}
+
+/* ── Panel de detalles (lateral) ─────────── */
+.detalle-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 300;
+    justify-content: flex-end;
+    backdrop-filter: blur(3px);
+}
+.detalle-overlay.active { display: flex; }
+
+.detalle-panel {
+    width: 420px;
+    max-width: 95vw;
+    height: 100%;
+    background: #161616;
+    overflow-y: auto;
+    border-left: 1px solid #2a2a2a;
+    animation: slideIn 0.3s ease;
+    position: relative;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+}
+
+.detalle-cerrar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #2a2a2a;
+    border: none;
+    color: #aaa;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s, color 0.2s;
+}
+.detalle-cerrar:hover { background: #ff4444; color: #fff; transform: none; }
+
+.detalle-img-wrap {
+    width: 100%;
+    height: 220px;
+    background: #222;
+    position: relative;
+    overflow: hidden;
+}
+.detalle-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.detalle-estado {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+}
+
+.detalle-content {
+    padding: 24px 24px 40px;
+}
+
+.detalle-marca {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: capitalize;
+    font-family: 'Barlow', sans-serif;
+    margin-bottom: 4px;
+}
+
+.detalle-titulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #f0f0f0;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.detalle-precio {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ffc400;
+    margin-bottom: 14px;
+}
+
+.detalle-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    color: #999;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.detalle-divider {
+    height: 1px;
+    background: #2a2a2a;
+    margin-bottom: 20px;
+}
+
+.detalle-subtitulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffc400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.detalle-specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.dspec {
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.dspec-label {
+    font-size: 0.68rem;
+    color: #666;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.dspec-valor {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f0f0f0;
+}
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 1100px) {
+    .vehicles-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 780px) {
+    .vehicles-grid { grid-template-columns: repeat(2, 1fr); padding: 16px; gap: 14px; }
+    .navbar { padding: 12px 16px; }
+    .search-section { padding: 16px; }
+    .search-row { flex-wrap: wrap; }
+    .btn-agregar { width: 100%; }
+    .modal-grid { grid-template-columns: 1fr; }
+    .detalle-panel { width: 100%; }
+}
+@media (max-width: 480px) {
+    .vehicles-grid { grid-template-columns: 1fr; }
+}
+
+/* Logo imagen en la página de registro */
+.branding .logo-img {
+    width: 100%;
+    max-width: 180px;
+    object-fit: contain;
+}
