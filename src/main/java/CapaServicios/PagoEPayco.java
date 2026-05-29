@@ -8,9 +8,10 @@ package CapaServicios;
  *
  * @author Familia
  */
-package CapaServicios;
 import java.awt.Desktop;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 public class PagoEPayco implements MetodoPago {
   
@@ -24,13 +25,17 @@ public class PagoEPayco implements MetodoPago {
     public void abrirPasarela() {
         try {
             Desktop.getDesktop().browse(new URI(LINK_COBRO));
-        } catch (Exception e) {
+        } catch (IOException | URISyntaxException e) {
             System.err.println("Error al abrir ePayco: " + e.getMessage());
         }
     }
 
     @Override
     public void procesarPago(double monto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    void abrirNavegador() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
