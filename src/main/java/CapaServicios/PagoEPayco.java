@@ -8,12 +8,25 @@ package CapaServicios;
  *
  * @author Familia
  */
+package CapaServicios;
+import java.awt.Desktop;
+import java.net.URI;
+
 public class PagoEPayco implements MetodoPago {
-    private final String PUBLIC_KEY = "tu_public_key_epayco";
+  
+    private final String LINK_COBRO = "https://payco.link/fee1ce6e-c699-4307-8a3b-e9f93ad24423";
 
+    @Override
     public String prepararPasarela(double monto, String descripcion) {
+        return LINK_COBRO;
+    }
 
-        return "EPAYCO_CONFIG:{key:'" + PUBLIC_KEY + "', name:'" + descripcion + "', currency:'cop'}";
+    public void abrirPasarela() {
+        try {
+            Desktop.getDesktop().browse(new URI(LINK_COBRO));
+        } catch (Exception e) {
+            System.err.println("Error al abrir ePayco: " + e.getMessage());
+        }
     }
 
     @Override
