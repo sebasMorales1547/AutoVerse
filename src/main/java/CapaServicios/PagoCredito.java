@@ -12,4 +12,9 @@ package CapaServicios;
 class PagoCredito implements MetodoPago {
     @Override
     public void procesarPago(double monto) { System.out.println("Cargo a tarjeta crédito: " + monto); }
+
+    @Override
+    public String prepararPasarela(double monto, String producto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
