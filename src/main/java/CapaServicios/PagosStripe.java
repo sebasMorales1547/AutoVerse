@@ -8,12 +8,26 @@ package CapaServicios;
  *
  * @author Familia
  */
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class PagosStripe implements MetodoPago {
-    private final String PUBLIC_KEY = "pk_test_tu_llave_stripe";
+  
+    private final String LINK_STRIPE = "https://buy.stripe.com/test_6oU28t0yW3ed281axDbo400";
+
+    @Override
     public String prepararPasarela(double monto, String descripcion) {
-        
-        return "STRIPE_CONFIG:{key:'" + PUBLIC_KEY + "', amount:" + (monto * 100) + "}";
+        return LINK_STRIPE;
+    }
+
+    public void abrirNavegador() {
+        try {
+            Desktop.getDesktop().browse(new URI(LINK_STRIPE));
+        } catch (IOException | URISyntaxException e) {
+            System.err.println("No se pudo abrir Stripe: " + e.getMessage());
+        }
     }
 
     @Override
