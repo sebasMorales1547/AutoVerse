@@ -4,10 +4,6 @@
  */
 package CapaServicios;
 
-/**
- *
- * @author Familia
- */
 public interface MetodoPasarela {
  
     String prepararPasarela(double monto, String descripcion);
