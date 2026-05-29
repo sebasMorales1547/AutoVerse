@@ -10,11 +10,19 @@ package CapaServicios;
  */
 public class GestionPasarelas {
     
-    public void procesarSeleccion(String plataforma) {
-        if (plataforma.equalsIgnoreCase("STRIPE")) {
-            new PagosStripe().abrirNavegador();
-        } else if (plataforma.equalsIgnoreCase("EPAYCO")) {
-            new PagoEPayco().abrirNavegador();
+  public void procesarSeleccion(String plataforma) {
+        switch (plataforma.toUpperCase()) {
+            case "STRIPE":
+                new PagosStripe().abrirNavegador();
+                break;
+            case "EPAYCO":
+                new PagoEPayco().abrirNavegador();
+                break;
+            case "WOMPI":
+                new PagoWompi().abrirPasarela();
+                break;
+            default:
+                System.out.println("Plataforma no reconocida.");
         }
     }
 }
