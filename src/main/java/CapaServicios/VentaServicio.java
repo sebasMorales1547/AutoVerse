@@ -16,9 +16,15 @@ public class VentaServicio {
             case "CREDITO": metodo = new PagoCredito(); break;
             default: throw new Excepciones("Método de pago no reconocido.");
         }
-
         metodo.procesarPago(publicacion.getPrecio());
-        
         dao.actualizarEstadoVenta(publicacion.getIdPublicacion(), "VENDIDO");
+    }
+     public void validarSoporte(String numTransaccion, String referencia) throws Excepciones {
+         
+        if (numTransaccion == null || numTransaccion.trim().isEmpty() || 
+            referencia == null || referencia.trim().isEmpty()) {
+            
+            throw new Excepciones("Debes ingresar los datos del soporte de pago.");
+        }
     }
 }
