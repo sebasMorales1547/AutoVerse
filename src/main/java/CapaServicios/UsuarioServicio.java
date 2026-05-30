@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 public class UsuarioServicio {
     private final UsuarioDao usuarioDao = new UsuarioDao();
+    private final NotificacionServicio notificacion = new NotificacionServicio();
 
     public void registrarNuevoUsuario(String user, String pass, String email) throws Excepciones, SQLException {
         if (user.isEmpty() || pass.isEmpty() || email.isEmpty())
@@ -35,7 +36,7 @@ public class UsuarioServicio {
         Usuarios usuario = usuarioDao.validarLogin(user, pass);
         if (usuario == null)
             throw new Excepciones("Credenciales incorrectas. Intente de nuevo.");
-//se hace resgitro de la nueva sesion
+
         SesionActual.iniciarSesion(usuario);
         return usuario;
     }
@@ -47,7 +48,33 @@ public class UsuarioServicio {
     public void cambiarRolUsuario(int cedulaObjetivo, RolUsuario nuevoRol) throws Excepciones, SQLException {
         if (!SesionActual.esAdmin())
             throw new Excepciones("No tienes permisos para cambiar roles de usuario.");
-
         usuarioDao.actualizarRol(cedulaObjetivo, nuevoRol);
+    }
+
+    public void solicitarRecuperacion(String correo) throws Excepciones {
+        // Buscar usuario por correo en la base de datos...
+        // Se envia el codigo de forma directa...
+        notificacion.enviarCodigoRecuperacion(correo, "Usuario");
+    }
+
+    /**
+     * @param correo
+     * @param codigo
+     * @return 
+     */
+    public boolean verificarCodigoRecuperacion(String correo, String codigo) {
+        return notificacion.verificarCodigoRecuperacion(correo, codigo);
+    }
+
+   
+    public void cambiarContrasena(String correo, String codigo, String nuevaContrasena)
+            throws Excepciones, SQLException {
+        if (nuevaContrasena.length() < 8)
+            throw new Excepciones("La nueva contraseña debe tener al menos 8 caracteres.");
+
+        if (!notificacion.verificarCodigoRecuperacion(correo, codigo))
+            throw new Excepciones("El código es incorrecto o ya expiró.");
+
+        usuarioDao.actualizarContrasena(correo, nuevaContrasena);
     }
 }
