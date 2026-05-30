@@ -200,7 +200,13 @@ function agregarVehiculo() {
     const estado      = document.getElementById("mEstado").value;
     const titulo      = get("mTitulo");
     const descripcion = get("mDescripcion");
-    const imagen      = get("mImagen");
+    const archivoImagen = document.getElementById("mImagen").files[0];
+
+    let imagen = "";
+
+    if (archivoImagen) {
+        imagen = URL.createObjectURL(archivoImagen);
+    }
 
     if (!placa || !marca || !modelo || !anio || !km || !precio) {
         alert("Por favor completa los campos obligatorios (Placa, Marca, Modelo, Año, Km, Precio).");
@@ -212,8 +218,12 @@ function agregarVehiculo() {
     cerrarModal();
     aplicarFiltros();
 
-    ["mPlaca","mMarca","mModelo","mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion","mImagen"]
-        .forEach(id => document.getElementById(id).value = "");
+    [
+    "mPlaca", "mMarca","mModelo", "mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion"
+].forEach(id => document.getElementById(id).value = "");
+
+document.getElementById("mImagen").value = "";
+
 }
 
 renderVehiculos(vehiculos);
