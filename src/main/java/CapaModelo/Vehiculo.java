@@ -1,5 +1,4 @@
 package CapaModelo;
-
 public class Vehiculo {
     private int idPublicacion;
     private String marca;
@@ -24,7 +23,6 @@ public class Vehiculo {
         this.kilometraje = kilometraje;
         this.color = color;
     }
-    // Getters y Setters
     public int getIdPublicacion() { return idPublicacion; }
     public void setIdPublicacion(int idPublicacion) { this.idPublicacion = idPublicacion; }
     public String getMarca() { return marca; }
