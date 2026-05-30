@@ -1,4 +1,7 @@
 package CapaDao;
+
+// Importaciones corregidas a CapaModelo
+import CapaModelo.Publicacion;
 import CapaModelo.Vehiculo;
 import CapaModelo.Subasta;
 import CapaUtilidades.Conexion;
@@ -7,47 +10,87 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dao {
-    public List<Vehiculo> listarDisponibles() throws SQLException {
-        List<Vehiculo> lista = new ArrayList<>();
-        String sql = "SELECT * FROM autos WHERE vendido = false";
-        try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+    /**
+     * @return 
+     * @throws java.sql.SQLException
+     */
+    public List<Publicacion> listarDisponibles() throws SQLException {
+        List<Publicacion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM PUBLICACIONES WHERE ESTADO = 'DISPONIBLE'";
+        
+        try (Connection con = Conexion.getConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                lista.add(new Vehiculo(rs.getInt("id"), rs.getString("marca"), 
-                        rs.getString("modelo"), rs.getDouble("precio"), 
-                        rs.getString("gama"), rs.getBoolean("vendido")));
+                Publicacion p = new Publicacion();
+                // Usamos los nombres exactos de la base de datos de Sebastián
+                p.setIdPublicacion(rs.getInt("id_publicacion"));
+                p.setTitulo(rs.getString("titulo"));
+                p.setDescripcion(rs.getString("descripcion"));
+                p.setPrecio(rs.getFloat("precio"));
+                p.setEstado(rs.getString("estado"));
+                p.setCedula(rs.getLong("cedula"));
+                lista.add(p);
             }
         }
         return lista;
     }
 
-    public void actualizarEstadoVenta(int id, boolean estado) throws SQLException {
-        String sql = "UPDATE autos SET vendido = ? WHERE id = ?";
-        try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setBoolean(1, estado);
+    /**
+     * @param id
+     * @param nuevoEstado
+     * @throws java.sql.SQLException
+     */
+    public void actualizarEstadoVenta(int id, String nuevoEstado) throws SQLException {
+        String sql = "UPDATE PUBLICACIONES SET ESTADO = ? WHERE id_publicacion = ?";
+        
+        try (Connection con = Conexion.getConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setString(1, nuevoEstado);
             ps.setInt(2, id);
             ps.executeUpdate();
         }
     }
 
-public void crearSubasta(Subasta subasta) throws SQLException {
-    String sql = "INSERT INTO subastas (id_auto, precio_actual, ultimo_postor, fecha_fin) VALUES (?, ?, ?, ?)";
-    try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setInt(1, subasta.getIdAuto());
-        ps.setDouble(2, subasta.getPrecioActual());
-        ps.setString(3, subasta.getUltimoPostor());
-        ps.setTimestamp(4, Timestamp.valueOf(subasta.getFechaFin()));
-        ps.executeUpdate();
+    /**
+     * Crea una nueva oferta/subasta.
+     * @param subasta
+     * @throws java.sql.SQLException
+     */
+    public void crearSubasta(Subasta subasta) throws SQLException {
+        String sql = "INSERT INTO OFERTAS (monto, estado, fecha, cedula, id_publicacion) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection con = Conexion.getConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setDouble(1, subasta.getMonto());
+            ps.setString(2, "ACTIVA");
+            ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            ps.setLong(4, subasta.getCedula());
+            ps.setInt(5, subasta.getIdPublicacion());
+            ps.executeUpdate();
+        }
     }
-}
 
-public void registrarPuja(int idAuto, double nuevoPrecio, String usuario) throws SQLException {
-    String sql = "UPDATE subastas SET precio_actual = ?, ultimo_postor = ? WHERE id_auto = ?";
-    try (Connection con = Conexion.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setDouble(1, nuevoPrecio);
-        ps.setString(2, usuario);
-        ps.setInt(3, idAuto);
-        ps.executeUpdate();
+    /**
+     * @param idOferta
+     * @param nuevoMonto
+     * @param nuevaCedula
+     * @throws java.sql.SQLException
+     */
+    public void registrarPuja(int idOferta, double nuevoMonto, long nuevaCedula) throws SQLException {
+        String sql = "UPDATE OFERTAS SET monto = ?, cedula = ? WHERE id_ofertas = ?";
+        
+        try (Connection con = Conexion.getConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setDouble(1, nuevoMonto);
+            ps.setLong(2, nuevaCedula);
+            ps.setInt(3, idOferta);
+            ps.executeUpdate();
+        }
     }
-}
 }

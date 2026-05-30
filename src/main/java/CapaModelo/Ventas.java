@@ -10,14 +10,14 @@ package CapaModelo;
  */
 
 import java.util.Date;
-public class Venta {
+public class Ventas {
     private int idVenta;
     private Date fechaVenta;
     private double montoFinal;
     private String metodoPago;
     private int idOferta;
-    public Venta() {}
-    public Venta(int idVenta, Date fechaVenta, double montoFinal, String metodoPago, int idOferta) {
+    public Ventas() {}
+    public Ventas(int idVenta, Date fechaVenta, double montoFinal, String metodoPago, int idOferta) {
         this.idVenta = idVenta;
         this.fechaVenta = fechaVenta;
         this.montoFinal = montoFinal;
