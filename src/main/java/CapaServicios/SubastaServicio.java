@@ -7,6 +7,6 @@ import CapaExcepciones.Excepciones;
 import java.sql.SQLException;
 
 public interface SubastaServicio {
-    void iniciarSubasta(int idAuto, double precioBase) throws SQLException;
+    void iniciarSubasta(int idAuto, double precioBase) throws Excepciones, SQLException;
     void realizarPuja(int idAuto, double monto, String usuario) throws Excepciones, SQLException;
 }

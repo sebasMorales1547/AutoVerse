@@ -72,7 +72,7 @@ public class Dao {
                     ps.setString(1, pub.getTitulo());
                     ps.setString(2, pub.getDescripcion());
                     ps.setFloat(3, pub.getPrecio());
-                    ps.setInt(4, pub.getCedula());
+                    ps.setInt(4, (int) pub.getCedula());
                     ps.executeUpdate();
 
                     ResultSet keys = ps.getGeneratedKeys();

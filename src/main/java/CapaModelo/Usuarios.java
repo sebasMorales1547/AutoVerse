@@ -38,28 +38,20 @@ public class Usuarios {
 
     public int getCedula() { return cedula; }
     public void setCedula(int cedula) { this.cedula = cedula; }
-
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
-
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) { this.apellido = apellido; }
-
     public String getContrasena() { return contrasena; }
     public void setContrasena(String contrasena) { this.contrasena = contrasena; }
-
     public String getCorreo() { return correo; }
     public void setCorreo(String correo) { this.correo = correo; }
-
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
-
     public String getFotoRuta() { return fotoRuta; }
     public void setFotoRuta(String fotoRuta) { this.fotoRuta = fotoRuta; }
-
     public RolUsuario getRol() { return rol; }
     public void setRol(RolUsuario rol) { this.rol = rol; }
-
     public boolean esAdmin()    { return rol == RolUsuario.ADMIN; }
     public boolean esVendedor() { return rol == RolUsuario.VENDEDOR; }
     public boolean esComprador(){ return rol == RolUsuario.COMPRADOR; }
