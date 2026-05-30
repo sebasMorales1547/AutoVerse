@@ -5,9 +5,9 @@
 package CapaUtilidades;
 //configuracion para enviar correos en tiempo real...
 public class EmailConfig {
-    public static final String CORREO_REMITENTE = "tuemail@gmail.com";  // <-- cambia esto
-    public static final String CLAVE_APP        = "xxxx xxxx xxxx xxxx"; // <-- contraseña de aplicación Gmail
+    public static final String CORREO_REMITENTE = "error404verdadero@gmail.com";
+    public static final String CLAVE_APP        = "ywrg bsww djzs cvnp";
     public static final String SMTP_HOST        = "smtp.gmail.com";
     public static final String SMTP_PORT        = "587";
-    public static final String NOMBRE_SISTEMA   = "Autoverse";
+    public static final String NOMBRE_SISTEMA   = "AutoVerse";
 }
