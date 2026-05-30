@@ -1,52 +1,65 @@
 package CapaModelo;
+
 import java.time.LocalDateTime;
 
 public class Subasta {
-    private int idAuto;
-    private double precioActual;
-    private String ultimoPostor;
+
+    private int idPublicacion;
+    private double monto;
+    private long cedula;  
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
+    private String estado; 
 
-    public Subasta() {}
-
-    public Subasta(int idAuto, double precioInicial) {
-        this.idAuto = idAuto;
-        this.precioActual = precioInicial;
-        this.ultimoPostor = "Sin ofertas";
+    public Subasta() {
         this.fechaInicio = LocalDateTime.now();
-        this.fechaFin = this.fechaInicio.plusHours(24); // Duraciin de 24 horas
+        this.estado = "ACTIVA";
+    }
+    public Subasta(int idPublicacion, double precioInicial) {
+        this();
+        this.idPublicacion = idPublicacion;
+        this.monto = precioInicial;
+        this.fechaFin = this.fechaInicio.plusHours(24); 
     }
 
     public boolean estaActiva() {
-        return LocalDateTime.now().isBefore(fechaFin);
-    }
-
-    public int getIdAuto() { return idAuto; }
-    public void setIdAuto(int idAuto) { this.idAuto = idAuto; }
-    public double getPrecioActual() { return precioActual; }
-    public void setPrecioActual(double precioActual) { this.precioActual = precioActual; }
-    public String getUltimoPostor() { return ultimoPostor; }
-    public void setUltimoPostor(String ultimoPostor) { this.ultimoPostor = ultimoPostor; }
-    public LocalDateTime getFechaFin() { return fechaFin; }
-
-    public double getMonto() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public long getCedula() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return LocalDateTime.now().isBefore(fechaFin) && "ACTIVA".equals(this.estado);
     }
 
     public int getIdPublicacion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return idPublicacion;
     }
-
-    public void setIdPublicacion(int idAuto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setIdPublicacion(int idPublicacion) {
+        this.idPublicacion = idPublicacion;
     }
-
-    public void setMonto(double precioBase) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public double getMonto() {
+        return monto;
+    }
+    public void setMonto(double monto) {
+        this.monto = monto;
+    }
+    public long getCedula() {
+        return cedula;
+    }
+    public void setCedula(long cedula) {
+        this.cedula = cedula;
+    }
+    public LocalDateTime getFechaInicio() {
+        return fechaInicio;
+    }
+    public void setFechaInicio(LocalDateTime fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+    public LocalDateTime getFechaFin() {
+        return fechaFin;
+    }
+    public void setFechaFin(LocalDateTime fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+    public String getEstado() {
+        return estado;
+    }
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
