@@ -4,7 +4,7 @@
  */
 package CapaModelo;
 
-public class Publicacion {
+public class Publicaciones {
     private int idPublicacion;
     private String titulo;
     private String descripcion;
@@ -12,9 +12,9 @@ public class Publicacion {
     private String estado;
     private int cedula;
 
-    public Publicacion() {}
+    public Publicaciones() {}
 
-    public Publicacion(int idPublicacion, String titulo, String descripcion, float precio, String estado, int cedula) {
+    public Publicaciones(int idPublicacion, String titulo, String descripcion, float precio, String estado, int cedula) {
         this.idPublicacion = idPublicacion;
         this.titulo = titulo;
         this.descripcion = descripcion;

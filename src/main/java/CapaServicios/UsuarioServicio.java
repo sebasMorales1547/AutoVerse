@@ -6,7 +6,7 @@ package CapaServicios;
 
 import CapaDao.UsuarioDao; 
 import CapaExcepciones.Excepciones;
-import CapaModelo.Usuario;
+import CapaModelo.Usuarios;
 import java.sql.SQLException;
 
 public class UsuarioServicio {
@@ -19,19 +19,19 @@ public class UsuarioServicio {
         if (user.length() < 4) {
             throw new Excepciones("El nombre de usuario debe tener al menos 4 caracteres.");
         }
-        if (pass.length() < 6) {
-            throw new Excepciones("La contraseña debe tener al menos 6 caracteres.");
+        if (pass.length() < 8) {
+            throw new Excepciones("La contraseña debe tener al menos 8 caracteres.");
         }
         
-        Usuario nuevo = new Usuario(user, pass, email);
+        Usuarios nuevo = new Usuarios(user, pass, email);
         usuarioDao.registrarUsuario(nuevo);
     }
 
-    public Usuario iniciarSesion(String user, String pass) throws Excepciones, SQLException {
+    public Usuarios iniciarSesion(String user, String pass) throws Excepciones, SQLException {
         if (user.isEmpty() || pass.isEmpty()) {
             throw new Excepciones("Por favor, ingrese sus credenciales.");
         }
-        Usuario usuario = usuarioDao.validarLogin(user, pass);
+        Usuarios usuario = usuarioDao.validarLogin(user, pass);
         
         if (usuario == null) {
             throw new Excepciones("Credenciales incorrectas. Intente de nuevo.");

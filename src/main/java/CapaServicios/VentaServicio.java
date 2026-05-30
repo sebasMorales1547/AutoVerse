@@ -3,12 +3,12 @@ package CapaServicios;
 import CapaDao.Dao;
 import CapaExcepciones.Excepciones;
 import java.sql.SQLException;
-import CapaModelo.Publicacion;
+import CapaModelo.Publicaciones;
 
 public class VentaServicio {
     private final Dao dao = new Dao(); 
 
-    public void realizarCompra(Publicacion publicacion, String tipoPago) throws Exception, SQLException {
+    public void realizarCompra(Publicaciones publicacion, String tipoPago) throws Exception, SQLException {
         MetodoPago metodo;
         switch (tipoPago.toUpperCase()) {
             case "EFECTIVO": metodo = new PagoEfectivo(); break;

@@ -1,6 +1,6 @@
 package CapaDao;
 
-import CapaModelo.Publicacion;
+import CapaModelo.Publicaciones;
 import CapaModelo.Subasta;
 import CapaModelo.Ventas;
 import CapaUtilidades.Conexion;
@@ -14,8 +14,8 @@ public class Dao {
      * @return 
      * @throws java.sql.SQLException
      */
-    public List<Publicacion> listarDisponibles() throws SQLException {
-        List<Publicacion> lista = new ArrayList<>();
+    public List<Publicaciones> listarDisponibles() throws SQLException {
+        List<Publicaciones> lista = new ArrayList<>();
         String sql = "SELECT * FROM PUBLICACIONES WHERE ESTADO = 'DISPONIBLE'";
         
         try (Connection con = Conexion.getConexion(); 
@@ -23,7 +23,7 @@ public class Dao {
             
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Publicacion p = new Publicacion();
+                Publicaciones p = new Publicaciones();
                 // Usamos los nombres exactos de la base de datos de Sebastián
                 p.setIdPublicacion(rs.getInt("id_publicacion"));
                 p.setTitulo(rs.getString("titulo"));

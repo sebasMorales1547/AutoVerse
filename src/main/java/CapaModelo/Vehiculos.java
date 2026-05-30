@@ -1,17 +1,17 @@
 package CapaModelo;
-public class Vehiculo {
+public class Vehiculos {
     private int idPublicacion;
     private String marca;
     private String modelo;
-    private double año;
-    private double kilometraje;
+    private int año;
+    private float kilometraje;
     private String gama; // Baja, Media, Alta
     private String placa;
     private String color;
 
-    public Vehiculo() {}
+    public Vehiculos() {}
 
-    public Vehiculo(int idPublicacion,String color,double año,double kilometraje, 
+    public Vehiculos(int idPublicacion,String color,int año,float kilometraje, 
             String marca, String modelo, double precio, String gama, String placa) {
         this.idPublicacion = idPublicacion;
         this.marca = marca;
@@ -28,9 +28,9 @@ public class Vehiculo {
     public String getMarca() { return marca; }
     public void setMarca(String marca) { this.marca = marca; }
     public double getAño() { return año; }
-    public void setAño(double año) { this.año = año; }
+    public void setAño(int año) { this.año = año; }
     public double getKilometraje() { return kilometraje; }
-    public void setKilometraje(double kilometraje) { this.kilometraje = kilometraje; }
+    public void setKilometraje(float kilometraje) { this.kilometraje = kilometraje; }
     public String getGama() { return gama; }
     public void setGama(String gama) { this.gama = gama; }
     public String getPlaca() { return placa; }

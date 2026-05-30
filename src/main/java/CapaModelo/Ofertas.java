@@ -10,15 +10,15 @@ package CapaModelo;
  */
 import java.util.Date;
 
-public class Oferta {
+public class Ofertas {
     private int idOfertas;
     private float monto;
     private String estado;
     private Date fecha;
     private int cedula;
     private int idPublicacion;
-    public Oferta() {}
-    public Oferta(int idOfertas, float monto, String estado, Date fecha, int cedula, int idPublicacion) {
+    public Ofertas() {}
+    public Ofertas(int idOfertas, float monto, String estado, Date fecha, int cedula, int idPublicacion) {
         this.idOfertas = idOfertas;
         this.monto = monto;
         this.estado = estado;
