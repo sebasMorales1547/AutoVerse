@@ -12,25 +12,29 @@ public class Usuarios {
     private String correo;
     private String telefono;
     private String fotoRuta;
+    private RolUsuario rol; 
 
     public Usuarios() {}
 
     // Constructor completo
     public Usuarios(String nombre, String contrasena, String apellido,
-                    String email, int cedula, String telefono) {
+                    String email, int cedula, String telefono, RolUsuario rol) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
         this.contrasena = contrasena;
         this.correo = email;
         this.telefono = telefono;
+        this.rol = rol;
     }
 
+    // Constructor simple
     public Usuarios(String nombre, String contrasena, String correo) {
         this.nombre = nombre;
         this.contrasena = contrasena;
         this.correo = correo;
-    }
+        this.rol = RolUsuario.COMPRADOR; 
+   }
 
     public int getCedula() { return cedula; }
     public void setCedula(int cedula) { this.cedula = cedula; }
@@ -52,4 +56,11 @@ public class Usuarios {
 
     public String getFotoRuta() { return fotoRuta; }
     public void setFotoRuta(String fotoRuta) { this.fotoRuta = fotoRuta; }
+
+    public RolUsuario getRol() { return rol; }
+    public void setRol(RolUsuario rol) { this.rol = rol; }
+
+    public boolean esAdmin()    { return rol == RolUsuario.ADMIN; }
+    public boolean esVendedor() { return rol == RolUsuario.VENDEDOR; }
+    public boolean esComprador(){ return rol == RolUsuario.COMPRADOR; }
 }
