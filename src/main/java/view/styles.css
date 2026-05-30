@@ -168,8 +168,8 @@ body.register-page {
 }
 
 .branding .logo-img {
-    width: 400%;
-    max-width: 480px;
+    width: 500%;
+    max-width: 580px;
     object-fit: contain;
 }
 
@@ -811,11 +811,4 @@ body.dashboard-page {
 }
 @media (max-width: 480px) {
     .vehicles-grid { grid-template-columns: 1fr; }
-}
-
-/* Logo imagen en la página de registro */
-.branding .logo-img {
-    width: 100%;
-    max-width: 180px;
-    object-fit: contain;
 }
