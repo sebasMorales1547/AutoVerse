@@ -53,11 +53,10 @@ public class UsuarioDao {
                 u.setNombre(rs.getString("nombre_usuario"));
                 u.setContrasena(rs.getString("contrasena"));
                 u.setCorreo(rs.getString("email"));
-                // Se carga el rol en la base de datos
                 try {
                     u.setRol(RolUsuario.valueOf(rs.getString("rol")));
-                } catch (Exception e) {
-                    u.setRol(RolUsuario.COMPRADOR); 
+                } catch (SQLException e) {
+                    u.setRol(RolUsuario.COMPRADOR);
                 }
                 return u;
             }
@@ -72,6 +71,21 @@ public class UsuarioDao {
 
             ps.setString(1, nuevoRol.name());
             ps.setInt(2, cedula);
+            ps.executeUpdate();
+        }
+    }
+    /**
+     * @param correo
+     * @param nuevaContrasena
+     * @throws java.sql.SQLException
+     */
+    public void actualizarContrasena(String correo, String nuevaContrasena) throws SQLException {
+        String sql = "UPDATE usuarios SET contrasena = ? WHERE email = ?";
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, hashContrasena(nuevaContrasena));
+            ps.setString(2, correo);
             ps.executeUpdate();
         }
     }
