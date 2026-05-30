@@ -2,8 +2,8 @@ package CapaDao;
 
 // Importaciones corregidas a CapaModelo
 import CapaModelo.Publicacion;
-import CapaModelo.Vehiculo;
 import CapaModelo.Subasta;
+import CapaModelo.Ventas;
 import CapaUtilidades.Conexion;
 import java.sql.*;
 import java.util.ArrayList;
@@ -56,7 +56,6 @@ public class Dao {
     }
 
     /**
-     * Crea una nueva oferta/subasta.
      * @param subasta
      * @throws java.sql.SQLException
      */
@@ -93,4 +92,44 @@ public class Dao {
             ps.executeUpdate();
         }
     }
+    /**
+     *
+     * @param v
+     * @param idPublicacion
+     * @return
+     * @throws SQLException
+     */
+    public boolean confirmarPagoManual(Ventas v, int idPublicacion) throws SQLException {
+    String sqlVentas = "INSERT INTO VENTAS (fecha_venta, monto_final, metodo_pago, id_oferta, num_transaccion, referencia, comprobante) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    String sqlEstado = "UPDATE PUBLICACIONES SET ESTADO = 'VENDIDO' WHERE id_publicacion = ?";
+    
+    Connection con = null;
+    try {
+        con = Conexion.getConexion();
+        con.setAutoCommit(false); // Iniciamos una transacción para que se hagan ambas cosas o ninguna
+
+        // 1. Insertar la Venta
+        try (PreparedStatement psV = con.prepareStatement(sqlVentas)) {
+            psV.setTimestamp(1, new Timestamp(v.getFechaVenta().getTime()));
+            psV.setDouble(2, v.getMontoFinal());
+            psV.setString(3, v.getMetodoPago());
+            psV.setInt(4, v.getIdItem());
+            psV.setString(5, v.getNumTransaccion());
+            psV.setString(6, v.getReferencia());
+            psV.setString(7, v.getComprobanteRuta());
+            psV.executeUpdate();
+        }
+
+        try (PreparedStatement psE = con.prepareStatement(sqlEstado)) {
+            psE.setInt(1, idPublicacion);
+            psE.executeUpdate();
+        }
+
+        con.commit();
+        return true;
+    } catch (SQLException e) {
+        if (con != null) con.rollback();
+        throw e;
+    }
 }
+    }

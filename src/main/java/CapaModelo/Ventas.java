@@ -16,6 +16,9 @@ public class Ventas {
     private double montoFinal;
     private String metodoPago;
     private int idOferta;
+    private String numTransaccion;
+    private String referencia;
+    private String comprobanteRuta;
     public Ventas() {}
     public Ventas(int idVenta, Date fechaVenta, double montoFinal, String metodoPago, int idOferta) {
         this.idVenta = idVenta;
@@ -39,4 +42,10 @@ public class Ventas {
 
     public int getIdItem() { return idOferta; }
     public void setIdOferta(int idOferta) { this.idOferta = idOferta; }
+    public String getNumTransaccion() { return numTransaccion; }
+    public void setNumTransaccion(String numTransaccion) { this.numTransaccion = numTransaccion; }
+    public String getReferencia() { return referencia; }
+    public void setReferencia(String referencia) { this.referencia = referencia; }
+    public String getComprobanteRuta() { return comprobanteRuta; }
+    public void setComprobanteRuta(String comprobanteRuta) { this.comprobanteRuta = comprobanteRuta; }
 }
