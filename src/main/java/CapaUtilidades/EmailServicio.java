@@ -8,7 +8,7 @@ import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import java.util.Properties;
 
-public class EmailJakarta {
+public class EmailServicio {
 
     private Session crearSesion() {
         Properties props = new Properties();
