@@ -1,8 +1,6 @@
 package CapaDao;
 
-import CapaModelo.Publicaciones;
-import CapaModelo.Subasta;
-import CapaModelo.Ventas;
+import CapaModelo.*;
 import CapaUtilidades.Conexion;
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,14 +17,99 @@ public class Dao {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Publicaciones p = new Publicaciones();
-                p.setIdPublicacion(rs.getInt("id_publicacion"));
-                p.setTitulo(rs.getString("titulo"));
-                p.setDescripcion(rs.getString("descripcion"));
-                p.setPrecio(rs.getFloat("precio"));
-                p.setEstado(rs.getString("estado"));
-                p.setCedula(rs.getInt("cedula"));
-                lista.add(p);
+                lista.add(mapearPublicacion(rs));
+            }
+        }
+        return lista;
+    }
+
+    public List<Publicaciones> buscarConFiltros(FiltroVehiculo filtro) throws SQLException {
+        List<Publicaciones> lista = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT p.* FROM PUBLICACIONES p " +
+            "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
+            "WHERE p.ESTADO = 'DISPONIBLE'"
+        );
+
+        if (filtro.getMarca() != null)         sql.append(" AND v.marca = ?");
+        if (filtro.getModelo() != null)        sql.append(" AND v.modelo = ?");
+        if (filtro.getAñoMin() != null)        sql.append(" AND v.año >= ?");
+        if (filtro.getAñoMax() != null)        sql.append(" AND v.año <= ?");
+        if (filtro.getPrecioMin() != null)     sql.append(" AND p.precio >= ?");
+        if (filtro.getPrecioMax() != null)     sql.append(" AND p.precio <= ?");
+        if (filtro.getGama() != null)          sql.append(" AND v.gama = ?");
+        if (filtro.getKilometrajeMax() != null)sql.append(" AND v.kilometraje <= ?");
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+            int i = 1;
+            if (filtro.getMarca() != null)          ps.setString(i++, filtro.getMarca());
+            if (filtro.getModelo() != null)         ps.setString(i++, filtro.getModelo());
+            if (filtro.getAñoMin() != null)         ps.setInt(i++, filtro.getAñoMin());
+            if (filtro.getAñoMax() != null)         ps.setInt(i++, filtro.getAñoMax());
+            if (filtro.getPrecioMin() != null)      ps.setDouble(i++, filtro.getPrecioMin());
+            if (filtro.getPrecioMax() != null)      ps.setDouble(i++, filtro.getPrecioMax());
+            if (filtro.getGama() != null)           ps.setString(i++, filtro.getGama());
+            if (filtro.getKilometrajeMax() != null) ps.setFloat(i++, filtro.getKilometrajeMax());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) lista.add(mapearPublicacion(rs));
+            }
+        }
+        return lista;
+    }
+    
+    public void crearPublicacion(Publicaciones pub, Vehiculos vehiculo) throws SQLException {
+        String sqlPub = "INSERT INTO PUBLICACIONES (titulo, descripcion, precio, estado, cedula) VALUES (?, ?, ?, 'DISPONIBLE', ?)";
+        String sqlVeh = "INSERT INTO VEHICULOS (id_publicacion, marca, modelo, año, kilometraje, gama, placa, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = Conexion.getConexion()) {
+            con.setAutoCommit(false);
+            try {
+                int idGenerado;
+                try (PreparedStatement ps = con.prepareStatement(sqlPub, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, pub.getTitulo());
+                    ps.setString(2, pub.getDescripcion());
+                    ps.setFloat(3, pub.getPrecio());
+                    ps.setInt(4, pub.getCedula());
+                    ps.executeUpdate();
+
+                    ResultSet keys = ps.getGeneratedKeys();
+                    if (!keys.next()) throw new SQLException("No se pudo obtener el ID de la publicación.");
+                    idGenerado = keys.getInt(1);
+                }
+
+                try (PreparedStatement psV = con.prepareStatement(sqlVeh)) {
+                    psV.setInt(1, idGenerado);
+                    psV.setString(2, vehiculo.getMarca());
+                    psV.setString(3, vehiculo.getModelo());
+                    psV.setDouble(4, vehiculo.getAño());
+                    psV.setDouble(5, vehiculo.getKilometraje());
+                    psV.setString(6, vehiculo.getGama());
+                    psV.setString(7, vehiculo.getPlaca());
+                    psV.setString(8, vehiculo.getColor());
+                    psV.executeUpdate();
+                }
+
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
+        }
+    }
+
+    public List<Publicaciones> listarPorVendedor(int cedula) throws SQLException {
+        List<Publicaciones> lista = new ArrayList<>();
+        String sql = "SELECT * FROM PUBLICACIONES WHERE cedula = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, cedula);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) lista.add(mapearPublicacion(rs));
             }
         }
         return lista;
@@ -43,7 +126,6 @@ public class Dao {
             ps.executeUpdate();
         }
     }
-
     public void crearSubasta(Subasta subasta) throws SQLException {
         String sql = "INSERT INTO OFERTAS (monto, estado, fecha, cedula, id_publicacion) VALUES (?, ?, ?, ?, ?)";
 
@@ -58,7 +140,6 @@ public class Dao {
             ps.executeUpdate();
         }
     }
-
     public void registrarPuja(int idOferta, double nuevoMonto, long nuevaCedula) throws SQLException {
         String sql = "UPDATE OFERTAS SET monto = ?, cedula = ? WHERE id_ofertas = ?";
 
@@ -71,12 +152,6 @@ public class Dao {
             ps.executeUpdate();
         }
     }
-
-    /**
-     * @param idPublicacion
-     * @return 
-     * @throws java.sql.SQLException
-     */
     public double obtenerMontoActual(int idPublicacion) throws SQLException {
         String sql = "SELECT MAX(monto) FROM OFERTAS WHERE id_publicacion = ? AND estado = 'ACTIVA'";
 
@@ -85,18 +160,14 @@ public class Dao {
 
             ps.setInt(1, idPublicacion);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
+            if (rs.next()) return rs.getDouble(1);
         }
         return 0;
     }
-
     public boolean confirmarPagoManual(Ventas v, int idPublicacion) throws SQLException {
         String sqlVentas = "INSERT INTO VENTAS (fecha_venta, monto_final, metodo_pago, id_oferta, num_transaccion, referencia, comprobante) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sqlEstado = "UPDATE PUBLICACIONES SET ESTADO = 'VENDIDO' WHERE id_publicacion = ?";
 
-        
         try (Connection con = Conexion.getConexion()) {
             con.setAutoCommit(false);
 
@@ -123,5 +194,50 @@ public class Dao {
                 throw e;
             }
         }
+    }
+
+    public List<HistorialCompra> obtenerHistorialCompras(int cedula) throws SQLException {
+        List<HistorialCompra> lista = new ArrayList<>();
+        String sql =
+            "SELECT v.id_venta, p.titulo, vh.marca, vh.modelo, " +
+            "       v.monto_final, v.metodo_pago, v.fecha_venta " +
+            "FROM VENTAS v " +
+            "JOIN OFERTAS o  ON v.id_oferta = o.id_ofertas " +
+            "JOIN PUBLICACIONES p ON o.id_publicacion = p.id_publicacion " +
+            "JOIN VEHICULOS vh ON p.id_publicacion = vh.id_publicacion " +
+            "WHERE o.cedula = ? " +
+            "ORDER BY v.fecha_venta DESC";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, cedula);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    HistorialCompra h = new HistorialCompra();
+                    h.setIdVenta(rs.getInt("id_venta"));
+                    h.setTituloPublicacion(rs.getString("titulo"));
+                    h.setMarcaVehiculo(rs.getString("marca"));
+                    h.setModeloVehiculo(rs.getString("modelo"));
+                    h.setMontoFinal(rs.getDouble("monto_final"));
+                    h.setMetodoPago(rs.getString("metodo_pago"));
+                    h.setFechaVenta(rs.getDate("fecha_venta"));
+                    h.setEstadoVenta("COMPLETADA");
+                    lista.add(h);
+                }
+            }
+        }
+        return lista;
+    }
+
+    private Publicaciones mapearPublicacion(ResultSet rs) throws SQLException {
+        Publicaciones p = new Publicaciones();
+        p.setIdPublicacion(rs.getInt("id_publicacion"));
+        p.setTitulo(rs.getString("titulo"));
+        p.setDescripcion(rs.getString("descripcion"));
+        p.setPrecio(rs.getFloat("precio"));
+        p.setEstado(rs.getString("estado"));
+        p.setCedula(rs.getInt("cedula"));
+        return p;
     }
 }
