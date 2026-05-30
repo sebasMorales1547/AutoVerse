@@ -10,11 +10,11 @@ public class Publicacion {
     private String descripcion;
     private float precio;
     private String estado;
-    private long cedula;
+    private int cedula;
 
     public Publicacion() {}
 
-    public Publicacion(int idPublicacion, String titulo, String descripcion, float precio, String estado, long cedula) {
+    public Publicacion(int idPublicacion, String titulo, String descripcion, float precio, String estado, int cedula) {
         this.idPublicacion = idPublicacion;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -39,5 +39,5 @@ public class Publicacion {
     public void setEstado(String estado) { this.estado = estado; }
 
     public long getCedula() { return cedula; }
-    public void setCedula(long cedula) { this.cedula = cedula; }
+    public void setCedula(int cedula) { this.cedula = cedula; }
 }

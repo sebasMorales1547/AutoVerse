@@ -1,6 +1,5 @@
 package CapaDao;
 
-// Importaciones corregidas a CapaModelo
 import CapaModelo.Publicacion;
 import CapaModelo.Subasta;
 import CapaModelo.Ventas;
@@ -31,7 +30,7 @@ public class Dao {
                 p.setDescripcion(rs.getString("descripcion"));
                 p.setPrecio(rs.getFloat("precio"));
                 p.setEstado(rs.getString("estado"));
-                p.setCedula(rs.getLong("cedula"));
+                p.setCedula(rs.getInt("cedula"));
                 lista.add(p);
             }
         }
@@ -106,9 +105,8 @@ public class Dao {
     Connection con = null;
     try {
         con = Conexion.getConexion();
-        con.setAutoCommit(false); // Iniciamos una transacción para que se hagan ambas cosas o ninguna
+        con.setAutoCommit(false); 
 
-        // 1. Insertar la Venta
         try (PreparedStatement psV = con.prepareStatement(sqlVentas)) {
             psV.setTimestamp(1, new Timestamp(v.getFechaVenta().getTime()));
             psV.setDouble(2, v.getMontoFinal());

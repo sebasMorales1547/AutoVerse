@@ -6,7 +6,7 @@ public class Subasta {
 
     private int idPublicacion;
     private double monto;
-    private long cedula;  
+    private int cedula;  
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
     private String estado; 
@@ -41,7 +41,7 @@ public class Subasta {
     public long getCedula() {
         return cedula;
     }
-    public void setCedula(long cedula) {
+    public void setCedula(int cedula) {
         this.cedula = cedula;
     }
     public LocalDateTime getFechaInicio() {
