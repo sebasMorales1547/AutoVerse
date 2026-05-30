@@ -3,13 +3,24 @@ package CapaServicios;
 import CapaDao.Dao;
 import CapaExcepciones.Excepciones;
 import CapaModelo.Subasta;
+import CapaUtilidades.SesionActual;
 import java.sql.SQLException;
 
 public class ControladorSubasta implements SubastaServicio {
     private final Dao dao = new Dao();
 
+    /**
+     *
+     * @param idAuto
+     * @param precioBase
+     * @throws Excepciones
+     * @throws SQLException
+     */
     @Override
-    public void iniciarSubasta(int idAuto, double precioBase) throws SQLException {
+    public void iniciarSubasta(int idAuto, double precioBase) throws Excepciones, SQLException {
+        if (!SesionActual.esVendedor() && !SesionActual.esAdmin())
+            throw new Excepciones("Solo un vendedor puede iniciar una subasta.");
+
         Subasta nueva = new Subasta();
         nueva.setIdPublicacion(idAuto);
         nueva.setMonto(precioBase);
@@ -18,18 +29,21 @@ public class ControladorSubasta implements SubastaServicio {
 
     @Override
     public void realizarPuja(int idAuto, double monto, String usuario) throws Excepciones, SQLException {
+        if (!SesionActual.haySesionActiva())
+            throw new Excepciones("Debes iniciar sesión para pujar.");
+
         long cedulaUsuario;
         try {
             cedulaUsuario = Long.parseLong(usuario);
         } catch (NumberFormatException e) {
             throw new Excepciones("El identificador de usuario no es válido.");
         }
-        
+
+        // Consulta el monto real desde la BD
         double precioActual = dao.obtenerMontoActual(idAuto);
 
-        if (monto <= precioActual) {
+        if (monto <= precioActual)
             throw new Excepciones("La puja debe ser mayor al precio actual: $" + precioActual);
-        }
 
         dao.registrarPuja(idAuto, monto, cedulaUsuario);
         System.out.println("Puja registrada por CC: " + cedulaUsuario + " por un valor de: $" + monto);
