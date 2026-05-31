@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoVerse – Catálogo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-page">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <img src="logo.png" alt="AutoVerse" class="nav-logo">
+        <a href="index.html" class="btn-cerrar">Cerrar sesión</a>
+    </nav>
+
+    <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+    <section class="search-section">
+        <div class="search-row">
+            <div class="search-wrap">
+                <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+                    <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Buscar por marca, modelo..." class="search-input">
+            </div>
+            <button class="btn-agregar" onclick="abrirModal()">+ Agregar vehículo</button>
+        </div>
+
+        <div class="filters-row">
+            <select id="filterMarca" class="filter-select">
+                <option value="">Todas las marcas</option>
+                <option value="lamborghini">Lamborghini</option>
+                <option value="ferrari">Ferrari</option>
+                <option value="bmw">BMW</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="toyota">Toyota</option>
+                <option value="ford">Ford</option>
+            </select>
+            <select id="filterPrecio" class="filter-select">
+                <option value="">Cualquier precio</option>
+                <option value="0-50000000">Hasta $50.000.000</option>
+                <option value="50000000-150000000">$50M – $150M</option>
+                <option value="150000000-999999999">Más de $150M</option>
+            </select>
+            <select id="filterAnio" class="filter-select">
+                <option value="">Cualquier año</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- GRID DE VEHÍCULOS -->
+    <main class="vehicles-grid" id="vehiclesGrid"></main>
+
+    <!-- ESTADO VACÍO -->
+    <div class="empty-state" id="emptyState" style="display:none">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" stroke="#ffc400" stroke-width="2" opacity="0.3"/>
+            <path d="M20 38 Q22 28 32 26 Q42 28 44 38" stroke="#ffc400" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="24" cy="40" r="4" fill="#333" stroke="#ffc400" stroke-width="1.5"/>
+            <circle cx="40" cy="40" r="4" fill="#333" stroke="#ffc400" stroke-width="1.5"/>
+        </svg>
+        <p>No se encontraron vehículos</p>
+    </div>
+
+    <!-- MODAL AGREGAR VEHÍCULO -->
+    <div class="modal-overlay" id="modalOverlay" onclick="cerrarModal(event)">
+        <div class="modal">
+            <h2>Agregar vehículo</h2>
+            <div class="modal-grid">
+                <div class="form-group">
+                    <label>Placa</label>
+                    <input type="text" id="mPlaca" placeholder="ej: ABC-123">
+                </div>
+                <div class="form-group">
+                    <label>Marca</label>
+                    <input type="text" id="mMarca" placeholder="ej: Lamborghini">
+                </div>
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <input type="text" id="mModelo" placeholder="ej: Aventador">
+                </div>
+                <div class="form-group">
+                    <label>Año</label>
+                    <input type="number" id="mAnio" placeholder="ej: 2025">
+                </div>
+                <div class="form-group">
+                    <label>Kilometraje</label>
+                    <input type="number" id="mKm" placeholder="ej: 5000">
+                </div>
+                <div class="form-group">
+                    <label>Color</label>
+                    <input type="text" id="mColor" placeholder="ej: Amarillo">
+                </div>
+                <div class="form-group">
+                    <label>Precio (COP)</label>
+                    <input type="number" id="mPrecio" placeholder="ej: 70000000">
+                </div>
+                <div class="form-group">
+                    <label>Combustible</label>
+                    <select id="mCombustible">
+                        <option value="Gasolina">Gasolina</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Eléctrico">Eléctrico</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="mEstado">
+                        <option value="Disponible">Disponible</option>
+                        <option value="Vendido">Vendido</option>
+                        <option value="Reservado">Reservado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Título publicación</label>
+                    <input type="text" id="mTitulo" placeholder="ej: Lamborghini en perfectas condiciones">
+                </div>
+                <div class="form-group full-width">
+                    <label>Descripción</label>
+                    <textarea id="mDescripcion" placeholder="Describe el vehículo..." rows="2"></textarea>
+                </div>
+                <div class="form-group full-width">
+                  <label>Imagen del vehículo</label>
+                  <input type="file" id="mImagen" accept="image/*">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-guardar" onclick="agregarVehiculo()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE DETALLES -->
+    <div class="detalle-overlay" id="detalleOverlay" onclick="cerrarDetalle(event)">
+        <div class="detalle-panel" id="detallePanel"></div>
+    </div>
+
+    <script src="catalogo.js"></script>
+    
+</body>
+</html>
