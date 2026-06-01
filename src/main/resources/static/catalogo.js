@@ -1,50 +1,14 @@
-let vehiculos = [
-    {
-        id: 1,
-        placa: "LAM-001",
-        marca: "lamborghini",
-        modelo: "Aventador",
-        anio: 2025,
-        km: 50,
-        color: "Amarillo",
-        precio: 70000000,
-        combustible: "Gasolina",
-        estado: "Disponible",
-        titulo: "Lamborghini Aventador impecable",
-        descripcion: "Vehículo en perfectas condiciones, único dueño, nunca chocado. Motor V12 de 700 HP.",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Lamborghini_Aventador_LP_700-4_%28yellow%29.jpg/1280px-Lamborghini_Aventador_LP_700-4_%28yellow%29.jpg"
-    },
-    {
-        id: 2,
-        placa: "FER-002",
-        marca: "ferrari",
-        modelo: "SF90 Stradale",
-        anio: 2024,
-        km: 120,
-        color: "Rojo",
-        precio: 180000000,
-        combustible: "Híbrido",
-        estado: "Disponible",
-        titulo: "Ferrari SF90 Stradale híbrido",
-        descripcion: "El Ferrari más potente de la historia. Sistema híbrido enchufable, 1000 CV.",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2020_Ferrari_SF90_Stradale%2C_front_8.15.19.jpg/1280px-2020_Ferrari_SF90_Stradale%2C_front_8.15.19.jpg"
-    },
-    {
-        id: 3,
-        placa: "BMW-003",
-        marca: "bmw",
-        modelo: "M4 Competition",
-        anio: 2023,
-        km: 340,
-        color: "Azul",
-        precio: 42000000,
-        combustible: "Gasolina",
-        estado: "Reservado",
-        titulo: "BMW M4 Competition xDrive",
-        descripcion: "Deportivo de alto rendimiento con tracción integral y 510 CV.",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/2021_BMW_M4_Competition_%28G82%29%2C_front_8.16.21.jpg/1280px-2021_BMW_M4_Competition_%28G82%29%2C_front_8.16.21.jpg"
-    }
-];
+let vehiculos = [];
+
+function cargarVehiculos() {
+    fetch("/api/publicaciones/disponibles")
+        .then(res => res.json())
+        .then(data => {
+            vehiculos = data;
+            renderVehiculos(vehiculos);
+        })
+        .catch(err => console.error("Error cargando vehículos:", err));
+}
 
 function formatPrecio(n) {
     return "$" + Number(n).toLocaleString("es-CO");
@@ -77,7 +41,7 @@ function renderVehiculos(lista) {
         card.style.animationDelay = (i * 0.07) + "s";
         card.innerHTML = `
             <div class="card-img-wrap">
-                <img src="${v.imagen}" alt="${v.marca} ${v.modelo}"
+                <img src="${v.imagen || ''}" alt="${v.marca} ${v.modelo}"
                      onerror="this.src=''; this.parentElement.classList.add('no-img')"
                      loading="lazy">
                 <div class="card-badge">${badgeEstado(v.estado)}</div>
@@ -89,18 +53,18 @@ function renderVehiculos(lista) {
                 <div class="card-specs">
                     <span class="spec">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
-                        ${v.km.toLocaleString()} km
+                        ${(v.km || v.kilometraje || 0).toLocaleString()} km
                     </span>
                     <span class="spec">
                         <svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="9" height="15" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M15 7h2a2 2 0 010 4h-2" stroke="currentColor" stroke-width="1.5"/><path d="M9 18v2M12 18v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                        ${v.combustible}
+                        ${v.combustible || ''}
                     </span>
                     <span class="spec">
                         <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V4M16 6V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.5"/></svg>
-                        ${v.anio}
+                        ${v.anio || v.año || ''}
                     </span>
                 </div>
-                <button class="btn-detalles" onclick="verDetalle(${v.id})">Ver detalles →</button>
+                <button class="btn-detalles" onclick="verDetalle(${v.id_publicacion})">Ver detalles →</button>
             </div>
         `;
         grid.appendChild(card);
@@ -108,14 +72,14 @@ function renderVehiculos(lista) {
 }
 
 function verDetalle(id) {
-    const v = vehiculos.find(x => x.id === id);
+    const v = vehiculos.find(x => x.id_publicacion === id);
     if (!v) return;
 
     document.getElementById("detallePanel").innerHTML = `
         <button class="detalle-cerrar" onclick="cerrarDetalle()">✕</button>
 
         <div class="detalle-img-wrap">
-            <img src="${v.imagen}" alt="${v.marca} ${v.modelo}"
+            <img src="${v.imagen || ''}" alt="${v.marca} ${v.modelo}"
                  onerror="this.style.display='none'">
             <div class="detalle-estado">${badgeEstado(v.estado)}</div>
         </div>
@@ -130,13 +94,13 @@ function verDetalle(id) {
 
             <h3 class="detalle-subtitulo">Especificaciones</h3>
             <div class="detalle-specs-grid">
-                <div class="dspec"><span class="dspec-label">Placa</span><span class="dspec-valor">${v.placa}</span></div>
+                <div class="dspec"><span class="dspec-label">Placa</span><span class="dspec-valor">${v.placa || ''}</span></div>
                 <div class="dspec"><span class="dspec-label">Marca</span><span class="dspec-valor" style="text-transform:capitalize">${v.marca}</span></div>
                 <div class="dspec"><span class="dspec-label">Modelo</span><span class="dspec-valor">${v.modelo}</span></div>
-                <div class="dspec"><span class="dspec-label">Año</span><span class="dspec-valor">${v.anio}</span></div>
-                <div class="dspec"><span class="dspec-label">Kilometraje</span><span class="dspec-valor">${v.km.toLocaleString()} km</span></div>
-                <div class="dspec"><span class="dspec-label">Color</span><span class="dspec-valor">${v.color}</span></div>
-                <div class="dspec"><span class="dspec-label">Combustible</span><span class="dspec-valor">${v.combustible}</span></div>
+                <div class="dspec"><span class="dspec-label">Año</span><span class="dspec-valor">${v.anio || v.año || ''}</span></div>
+                <div class="dspec"><span class="dspec-label">Kilometraje</span><span class="dspec-valor">${(v.km || v.kilometraje || 0).toLocaleString()} km</span></div>
+                <div class="dspec"><span class="dspec-label">Color</span><span class="dspec-valor">${v.color || ''}</span></div>
+                <div class="dspec"><span class="dspec-label">Combustible</span><span class="dspec-valor">${v.combustible || ''}</span></div>
                 <div class="dspec"><span class="dspec-label">Estado</span><span class="dspec-valor">${v.estado}</span></div>
             </div>
         </div>
@@ -158,9 +122,9 @@ function aplicarFiltros() {
     const anio    = document.getElementById("filterAnio").value;
 
     const resultado = vehiculos.filter(v => {
-        const matchTexto = v.marca.includes(texto) || v.modelo.toLowerCase().includes(texto);
+        const matchTexto = v.marca?.toLowerCase().includes(texto) || v.modelo?.toLowerCase().includes(texto);
         const matchMarca = !marca || v.marca === marca;
-        const matchAnio  = !anio  || v.anio === Number(anio);
+        const matchAnio  = !anio  || (v.anio || v.año) === Number(anio);
         let matchPrecio  = true;
         if (precioR) {
             const [min, max] = precioR.split("-").map(Number);
@@ -187,36 +151,39 @@ function cerrarModal(e) {
 }
 
 function agregarVehiculo() {
+    const get = id => document.getElementById(id).value.trim();
 
     const data = {
-        placa: document.getElementById("mPlaca").value.toUpperCase(),
-        marca: document.getElementById("mMarca").value,
-        modelo: document.getElementById("mModelo").value,
-        anio: Number(document.getElementById("mAnio").value),
-        kilometraje: Number(document.getElementById("mKm").value),
-        color: document.getElementById("mColor").value,
-        precio: Number(document.getElementById("mPrecio").value),
+        placa:       get("mPlaca").toUpperCase(),
+        marca:       get("mMarca").toLowerCase(),
+        modelo:      get("mModelo"),
+        anio:        Number(get("mAnio")),
+        kilometraje: Number(get("mKm")),
+        color:       get("mColor"),
+        precio:      Number(get("mPrecio")),
         combustible: document.getElementById("mCombustible").value,
-        estado: document.getElementById("mEstado").value,
-        titulo: document.getElementById("mTitulo").value,
-        descripcion: document.getElementById("mDescripcion").value
+        estado:      document.getElementById("mEstado").value,
+        titulo:      get("mTitulo"),
+        descripcion: get("mDescripcion")
     };
 
-    fetch("ServletPublicacion", {
+    if (!data.placa || !data.marca || !data.modelo || !data.anio || !data.kilometraje || !data.precio) {
+        alert("Por favor completa los campos obligatorios (Placa, Marca, Modelo, Año, Km, Precio).");
+        return;
+    }
+
+    fetch("/api/publicaciones/crear", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     })
     .then(res => res.text())
-    .then(resp => {
-        console.log(resp);
-
-        alert("Vehículo guardado en la base de datos");
-
-        // cargarVehiculos();
-
+    .then(() => {
+        alert("Vehículo guardado ✔");
+        cerrarModal();
+        cargarVehiculos();
+        ["mPlaca","mMarca","mModelo","mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion"]
+            .forEach(id => document.getElementById(id).value = "");
     })
     .catch(err => {
         console.error(err);
@@ -224,4 +191,4 @@ function agregarVehiculo() {
     });
 }
 
-renderVehiculos(vehiculos);
+cargarVehiculos();

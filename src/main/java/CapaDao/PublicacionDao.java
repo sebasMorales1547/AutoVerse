@@ -60,66 +60,31 @@ public class PublicacionDao{
         return lista;
     }
 
-    public void crearPublicacion(Publicaciones pub, Vehiculos vehiculo) throws SQLException {
-        String sqlPub = "INSERT INTO PUBLICACIONES (titulo, descripcion, precio, estado, cedula) " +
-                        "VALUES (?, ?, ?, 'DISPONIBLE', ?)";
+   public int crearPublicacion(Publicaciones pub) throws SQLException {
+    String sql = "INSERT INTO PUBLICACIONES (id_publicacion, titulo, descripcion, precio, estado, cedula) " +
+                 "VALUES (seq_publicacion.NEXTVAL, ?, ?, ?, 'DISPONIBLE', ?)";
 
-        try (Connection con = Conexion.getConexion()) {
-            con.setAutoCommit(false);
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql, new String[]{"ID_PUBLICACION"})) {
 
-            try {
-                int idGenerado;
+        ps.setString(1, pub.getTitulo());
+        ps.setString(2, pub.getDescripcion());
+        ps.setFloat(3, pub.getPrecio());
+        ps.setLong(4, pub.getCedula());
 
-                try (PreparedStatement ps = con.prepareStatement(sqlPub, Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, pub.getTitulo());
-                    ps.setString(2, pub.getDescripcion());
-                    ps.setFloat(3, pub.getPrecio());
-                    ps.setInt(4, (int) pub.getCedula());
-                    ps.executeUpdate();
+        // ← aquí
+        System.out.println("=== URL conexion: " + con.getMetaData().getURL());
+        System.out.println("=== Usuario conexion: " + con.getMetaData().getUserName());
+        System.out.println("=== Cedula a insertar: " + pub.getCedula());
 
-                    ResultSet keys = ps.getGeneratedKeys();
-                    if (!keys.next()) throw new SQLException("No se pudo obtener el ID de la publicación.");
-                    idGenerado = keys.getInt(1);
-                }
+        ps.executeUpdate();
 
-                VehiculoDao vehiculoDao = new VehiculoDao();
-                vehiculoDao.insertarVehiculo(vehiculo, idGenerado);
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) return rs.getInt(1);
 
-                con.commit();
-
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
-            }
-        }
+        throw new SQLException("No se pudo obtener ID de publicación");
     }
-
-    public List<Publicaciones> listarPorVendedor(int cedula) throws SQLException {
-        List<Publicaciones> lista = new ArrayList<>();
-        String sql = "SELECT * FROM PUBLICACIONES WHERE cedula = ?";
-
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, cedula);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) lista.add(mapearPublicacion(rs));
-            }
-        }
-        return lista;
-    }
-
-    public void actualizarEstadoVenta(int id, String nuevoEstado) throws SQLException {
-        String sql = "UPDATE PUBLICACIONES SET ESTADO = ? WHERE id_publicacion = ?";
-
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, nuevoEstado);
-            ps.setInt(2, id);
-            ps.executeUpdate();
-        }
-    }
+}
 
     private Publicaciones mapearPublicacion(ResultSet rs) throws SQLException {
         Publicaciones p = new Publicaciones();
@@ -131,4 +96,18 @@ public class PublicacionDao{
         p.setCedula(rs.getInt("cedula"));
         return p;
     }
+
+    public void actualizarEstadoVenta(int id, String nuevoEstado) throws SQLException {
+    String sql = "UPDATE PUBLICACIONES SET ESTADO = ? WHERE id_publicacion = ?";
+
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, nuevoEstado);
+        ps.setInt(2, id);
+        ps.executeUpdate();
+    }
+}
+
+
 }
