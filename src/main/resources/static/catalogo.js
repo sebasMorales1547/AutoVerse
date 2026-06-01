@@ -64,7 +64,7 @@ function renderVehiculos(lista) {
                         ${v.anio || v.año || ''}
                     </span>
                 </div>
-                <button class="btn-detalles" onclick="verDetalle(${v.id_publicacion})">Ver detalles →</button>
+                <button class="btn-detalles" onclick="verDetalle(${v.idPublicacion})">Ver detalles →</button>
             </div>
         `;
         grid.appendChild(card);
@@ -72,7 +72,7 @@ function renderVehiculos(lista) {
 }
 
 function verDetalle(id) {
-    const v = vehiculos.find(x => x.id_publicacion === id);
+    const v = vehiculos.find(x => x.idPublicacion === id);
     if (!v) return;
 
     document.getElementById("detallePanel").innerHTML = `
