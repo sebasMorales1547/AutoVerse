@@ -3,6 +3,7 @@ package CapaServicios;
 import CapaDao.*;
 import CapaExcepciones.Excepciones;
 import CapaModelo.FiltroVehiculo;
+import CapaModelo.PublicacionDetalle;
 import CapaModelo.Publicaciones;
 import CapaModelo.Vehiculos;
 import CapaUtilidades.SesionActual;
@@ -45,8 +46,8 @@ public class PublicacionServicio {
         vehiculoDao.insertarVehiculo(vehiculo, idPublicacion); 
     }
 
-    public List<Publicaciones> listarDisponibles() throws SQLException {
-        return dao.listarDisponibles();
+    public List<PublicacionDetalle> listarDisponibles() throws SQLException {
+        return dao.listarDisponiblesDetalle();
     }
 
     public List<Publicaciones> buscarVehiculos(FiltroVehiculo filtro) throws SQLException {

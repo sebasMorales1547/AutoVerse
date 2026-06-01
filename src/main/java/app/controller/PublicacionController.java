@@ -2,6 +2,7 @@ package app.controller;
 
 import CapaDao.PublicacionDao;
 import CapaDao.VehiculoDao;
+import CapaModelo.PublicacionDetalle;
 import CapaModelo.Publicaciones;
 import CapaModelo.Vehiculos;
 import java.util.List;
@@ -46,15 +47,15 @@ public String crear(@RequestBody Map<String, Object> body) {
     }
 }
 
-    @GetMapping("/disponibles")
-    public List<Publicaciones> listar() {
-        try {
-            return dao.listarDisponibles();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return List.of();
-        }
+   @GetMapping("/disponibles")
+public List<PublicacionDetalle> listar() {
+    try {
+        return dao.listarDisponiblesDetalle();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return List.of();
     }
+}
 
     
 }
