@@ -10,12 +10,14 @@ public class PublicacionDao{
 
     public List<PublicacionDetalle> listarDisponiblesDetalle() throws SQLException {
     List<PublicacionDetalle> lista = new ArrayList<>();
-    String sql = "SELECT p.id_publicacion, p.titulo, p.descripcion, p.precio, p.estado, p.cedula, " +
-                 "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible, " +
-                 "(SELECT f.url FROM FOTOS f WHERE f.id_publicacion = p.id_publicacion AND ROWNUM = 1) AS imagen " +
-                 "FROM PUBLICACIONES p " +
-                 "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
-                 "WHERE p.estado = 'DISPONIBLE'";
+    String sql = "SELECT p.id_publicacion, p.titulo, p.descripcion, p.precio, p.estado, p.cedula, p.tipo, " +
+             "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible, " +
+             "(SELECT f.url FROM FOTOS f WHERE f.id_publicacion = p.id_publicacion AND ROWNUM = 1) AS imagen, " +
+             "(SELECT o.monto FROM OFERTAS o WHERE o.id_publicacion = p.id_publicacion AND o.estado = 'ACTIVA' AND ROWNUM = 1) AS monto_actual, " +
+             "(SELECT o.fecha_limite FROM OFERTAS o WHERE o.id_publicacion = p.id_publicacion AND o.estado = 'ACTIVA' AND ROWNUM = 1) AS fecha_limite " +
+             "FROM PUBLICACIONES p " +
+             "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
+             "WHERE p.estado = 'DISPONIBLE'";
 
     try (Connection con = Conexion.getConexion();
          PreparedStatement ps = con.prepareStatement(sql);
@@ -106,16 +108,17 @@ public class PublicacionDao{
     }
 }
 
-    private Publicaciones mapearPublicacion(ResultSet rs) throws SQLException {
-        Publicaciones p = new Publicaciones();
-        p.setIdPublicacion(rs.getInt("id_publicacion"));
-        p.setTitulo(rs.getString("titulo"));
-        p.setDescripcion(rs.getString("descripcion"));
-        p.setPrecio(rs.getFloat("precio"));
-        p.setEstado(rs.getString("estado"));
-        p.setCedula(rs.getInt("cedula"));
-        return p;
-    }
+   private Publicaciones mapearPublicacion(ResultSet rs) throws SQLException {
+    Publicaciones p = new Publicaciones();
+    p.setIdPublicacion(rs.getInt("id_publicacion"));
+    p.setTitulo(rs.getString("titulo"));
+    p.setDescripcion(rs.getString("descripcion"));
+    p.setPrecio(rs.getFloat("precio"));
+    p.setEstado(rs.getString("estado"));
+    p.setCedula(rs.getInt("cedula"));
+    p.setTipo(rs.getString("tipo"));
+    return p;
+}
 
     public void actualizarEstadoVenta(int id, String nuevoEstado) throws SQLException {
     String sql = "UPDATE PUBLICACIONES SET ESTADO = ? WHERE id_publicacion = ?";
