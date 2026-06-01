@@ -21,26 +21,21 @@ public class UsuarioController {
 
         } catch (Exception e) {
 
-        e.printStackTrace();
-        return e.getMessage();
+            e.printStackTrace();
+            return e.getMessage();
         }
     }
 
     @PostMapping("/login")
     public String login(@RequestBody Usuarios usuario) {
-
         try {
-
-            usuarioServicio.iniciarSesion(
-            usuario.getCorreo(),
-            usuario.getContrasena()
-        );
-
-        return "OK";
-
-         } catch (Exception e) {
-
-        return e.getMessage();
+            Usuarios u = usuarioServicio.iniciarSesion(
+                    usuario.getCorreo(),
+                    usuario.getContrasena());
+            // Devuelve cedula|nombre para que el frontend lo guarde
+            return "OK:" + u.getCedula() + "|" + u.getNombre();
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 }

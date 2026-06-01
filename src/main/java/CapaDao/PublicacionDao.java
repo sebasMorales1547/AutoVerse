@@ -11,19 +11,23 @@ public class PublicacionDao{
     public List<PublicacionDetalle> listarDisponiblesDetalle() throws SQLException {
     List<PublicacionDetalle> lista = new ArrayList<>();
     String sql = "SELECT p.id_publicacion, p.titulo, p.descripcion, p.precio, p.estado, p.cedula, p.tipo, " +
-             "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible, " +
-             "(SELECT f.url FROM FOTOS f WHERE f.id_publicacion = p.id_publicacion AND ROWNUM = 1) AS imagen, " +
-             "(SELECT o.monto FROM OFERTAS o WHERE o.id_publicacion = p.id_publicacion AND o.estado = 'ACTIVA' AND ROWNUM = 1) AS monto_actual, " +
-             "(SELECT o.fecha_limite FROM OFERTAS o WHERE o.id_publicacion = p.id_publicacion AND o.estado = 'ACTIVA' AND ROWNUM = 1) AS fecha_limite " +
-             "FROM PUBLICACIONES p " +
-             "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
-             "WHERE p.estado = 'DISPONIBLE'";
+                 "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible, " +
+                 "(SELECT f.url FROM FOTOS f WHERE f.id_publicacion = p.id_publicacion AND ROWNUM = 1) AS imagen, " +
+                 "(SELECT o.monto FROM OFERTAS o WHERE o.id_publicacion = p.id_publicacion AND o.estado = 'ACTIVA' AND ROWNUM = 1) AS monto_actual, " +
+                 "(SELECT o.fecha_limite FROM OFERTAS o WHERE o.id_publicacion = p.id_publicacion AND o.estado = 'ACTIVA' AND ROWNUM = 1) AS fecha_limite " +
+                 "FROM PUBLICACIONES p " +
+                 "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
+                 "WHERE p.estado = 'DISPONIBLE'";
 
     try (Connection con = Conexion.getConexion();
          PreparedStatement ps = con.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
 
+        System.out.println("=== SQL ejecutado correctamente ===");
+        int contador = 0;
         while (rs.next()) {
+            contador++;
+            System.out.println("=== Fila " + contador + ": id=" + rs.getInt("id_publicacion") + " marca=" + rs.getString("marca"));
             PublicacionDetalle d = new PublicacionDetalle();
             d.setIdPublicacion(rs.getInt("id_publicacion"));
             d.setTitulo(rs.getString("titulo"));
@@ -31,6 +35,7 @@ public class PublicacionDao{
             d.setPrecio(rs.getFloat("precio"));
             d.setEstado(rs.getString("estado"));
             d.setCedula(rs.getLong("cedula"));
+            d.setTipo(rs.getString("tipo"));
             d.setPlaca(rs.getString("placa"));
             d.setMarca(rs.getString("marca"));
             d.setModelo(rs.getString("modelo"));
@@ -39,8 +44,11 @@ public class PublicacionDao{
             d.setColor(rs.getString("color"));
             d.setCombustible(rs.getString("combustible"));
             d.setImagen(rs.getString("imagen"));
+            d.setMontoActual(rs.getDouble("monto_actual"));
+            d.setFechaLimite(rs.getTimestamp("fecha_limite"));
             lista.add(d);
         }
+        System.out.println("=== Total filas: " + contador + " ===");
     }
     return lista;
 }

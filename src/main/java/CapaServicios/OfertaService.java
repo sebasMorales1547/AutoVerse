@@ -14,7 +14,7 @@ public class OfertaService {
         String estado = ofertaDao.obtenerEstadoPublicacion(idPublicacion);
         if (estado == null)
             throw new IllegalArgumentException("Publicación no encontrada");
-        if (!"Disponible".equals(estado))
+        if (!"DISPONIBLE".equals(estado))
             throw new IllegalArgumentException("Esta publicación ya no está disponible");
 
         Ofertas subasta = ofertaDao.obtenerSubastaPorPublicacion(idPublicacion);
@@ -40,7 +40,7 @@ public class OfertaService {
         String estado = ofertaDao.obtenerEstadoPublicacion(idPublicacion);
         if (estado == null)
             throw new IllegalArgumentException("Publicación no encontrada");
-        if (!"Disponible".equals(estado))
+        if (!"DISPONIBLE".equals(estado))
             throw new IllegalArgumentException("Este vehículo ya no está disponible");
 
         if (!ofertaDao.existeUsuario(cedula))
@@ -50,7 +50,7 @@ public class OfertaService {
 
         Ofertas oferta = new Ofertas();
         oferta.setMonto(precio);
-        oferta.setEstado("Aceptada");
+        oferta.setEstado("ACEPTADA");
         oferta.setCedula(cedula);
         oferta.setIdPublicacion(idPublicacion);
         oferta.setTipo("DIRECTA");

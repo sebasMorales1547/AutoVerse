@@ -1,4 +1,4 @@
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
@@ -23,12 +23,14 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         const mensaje = await respuesta.text();
 
-        if (mensaje === "OK") {
-
+        if (mensaje.startsWith("OK:")) {
+            const partes = mensaje.split(":")[1].split("|");
+            const cedula = partes[0];
+            const nombre = partes[1];
+            sessionStorage.setItem("cedula", cedula);
+            sessionStorage.setItem("nombre", nombre);
             window.location.href = "catalogo.html";
-
         } else {
-
             alert(mensaje);
         }
 
