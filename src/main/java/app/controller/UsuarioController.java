@@ -11,21 +11,16 @@ public class UsuarioController {
     private UsuarioServicio usuarioServicio = new UsuarioServicio();
 
     @PostMapping("/registro")
-    public String registrar(@RequestBody Usuarios usuario) {
-
-    System.out.println("Solicitud recibida");
-    System.out.println(usuario.getNombre());
+public String registrar(@RequestBody Usuarios usuario) {
 
     try {
-        usuarioServicio.registrarNuevoUsuario(
-            usuario.getNombre(),
-            usuario.getContrasena(),
-            usuario.getCorreo()
-        );
+
+        usuarioServicio.registrarNuevoUsuario(usuario);
 
         return "Usuario registrado correctamente";
 
     } catch (Exception e) {
+
         e.printStackTrace();
         return e.getMessage();
     }

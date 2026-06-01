@@ -15,18 +15,23 @@ public class UsuarioServicio {
     private final UsuarioDao usuarioDao = new UsuarioDao();
     private final NotificacionServicio notificacion = new NotificacionServicio();
 
-    public void registrarNuevoUsuario(String user, String pass, String email) throws Excepciones, SQLException {
-        if (user.isEmpty() || pass.isEmpty() || email.isEmpty())
-            throw new Excepciones("Todos los campos son obligatorios.");
-        if (user.length() < 4)
-            throw new Excepciones("El nombre de usuario debe tener al menos 4 caracteres.");
-        if (pass.length() < 8)
-            throw new Excepciones("La contraseña debe tener al menos 8 caracteres.");
-        if (!email.contains("@"))
-            throw new Excepciones("El correo electrónico no es válido.");
+    public void registrarNuevoUsuario(Usuarios usuario) throws Excepciones, SQLException {
 
-        Usuarios nuevo = new Usuarios(user, pass, email);
-        usuarioDao.registrarUsuario(nuevo);
+        if (usuario.getNombre().isEmpty() || usuario.getContrasena().isEmpty() || usuario.getCorreo().isEmpty()) {
+
+            throw new Excepciones("Todos los campos son obligatorios.");
+        }
+
+        if (usuario.getNombre().length() < 4)
+          throw new Excepciones("El nombre debe tener al menos 4 caracteres.");
+
+        if (usuario.getContrasena().length() < 8)
+          throw new Excepciones("La contraseña debe tener al menos 8 caracteres.");
+
+         if (!usuario.getCorreo().contains("@"))
+             throw new Excepciones("El correo electrónico no es válido.");
+
+        usuarioDao.registrarUsuario(usuario);
     }
 
     public Usuarios iniciarSesion(String user, String pass) throws Excepciones, SQLException {

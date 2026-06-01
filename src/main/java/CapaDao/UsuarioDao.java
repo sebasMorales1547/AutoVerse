@@ -26,17 +26,26 @@ public class UsuarioDao {
     }
 
     public void registrarUsuario(Usuarios usuario) throws SQLException {
-        String sql = "INSERT INTO usuarios (nombre_usuario, contrasena, email, rol) VALUES (?, ?, ?, ?)";
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, usuario.getNombre());
-            ps.setString(2, hashContrasena(usuario.getContrasena()));
-            ps.setString(3, usuario.getCorreo());
-            ps.setString(4, usuario.getRol() != null ? usuario.getRol().name() : RolUsuario.COMPRADOR.name());
-            ps.executeUpdate();
-        }
+    String sql = """
+        INSERT INTO usuarios
+        (cedula, nombre, apellido, correo, contrasena, telefono)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """;
+
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, usuario.getCedula());
+        ps.setString(2, usuario.getNombre());
+        ps.setString(3, usuario.getApellido());
+        ps.setString(4, usuario.getCorreo());
+        ps.setString(5, hashContrasena(usuario.getContrasena()));
+        ps.setString(6, usuario.getTelefono());
+
+        ps.executeUpdate();
     }
+}
 
     public Usuarios validarLogin(String user, String pass) throws SQLException {
         String sql = "SELECT * FROM usuarios WHERE nombre_usuario = ? AND contrasena = ?";
