@@ -1,13 +1,13 @@
 package CapaServicios;
 
-import CapaDao.Dao;
+import CapaDao.*;
 import CapaExcepciones.Excepciones;
 import CapaModelo.Publicaciones;
 import CapaUtilidades.SesionActual;
 import java.sql.SQLException;
 
 public class VentaServicio {
-    private final Dao dao = new Dao();
+    private final PublicacionDao dao = new PublicacionDao();
 
     public void realizarCompra(Publicaciones publicacion, String tipoPago) throws Excepciones, SQLException {
         if (!SesionActual.haySesionActiva())

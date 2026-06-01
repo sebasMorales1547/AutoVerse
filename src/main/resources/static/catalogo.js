@@ -187,43 +187,41 @@ function cerrarModal(e) {
 }
 
 function agregarVehiculo() {
-    const get = id => document.getElementById(id).value.trim();
 
-    const placa       = get("mPlaca").toUpperCase();
-    const marca       = get("mMarca").toLowerCase();
-    const modelo      = get("mModelo");
-    const anio        = Number(get("mAnio"));
-    const km          = Number(get("mKm"));
-    const color       = get("mColor");
-    const precio      = Number(get("mPrecio"));
-    const combustible = document.getElementById("mCombustible").value;
-    const estado      = document.getElementById("mEstado").value;
-    const titulo      = get("mTitulo");
-    const descripcion = get("mDescripcion");
-    const archivoImagen = document.getElementById("mImagen").files[0];
+    const data = {
+        placa: document.getElementById("mPlaca").value.toUpperCase(),
+        marca: document.getElementById("mMarca").value,
+        modelo: document.getElementById("mModelo").value,
+        anio: Number(document.getElementById("mAnio").value),
+        kilometraje: Number(document.getElementById("mKm").value),
+        color: document.getElementById("mColor").value,
+        precio: Number(document.getElementById("mPrecio").value),
+        combustible: document.getElementById("mCombustible").value,
+        estado: document.getElementById("mEstado").value,
+        titulo: document.getElementById("mTitulo").value,
+        descripcion: document.getElementById("mDescripcion").value
+    };
 
-    let imagen = "";
+    fetch("ServletPublicacion", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(resp => {
+        console.log(resp);
 
-    if (archivoImagen) {
-        imagen = URL.createObjectURL(archivoImagen);
-    }
+        alert("Vehículo guardado en la base de datos");
 
-    if (!placa || !marca || !modelo || !anio || !km || !precio) {
-        alert("Por favor completa los campos obligatorios (Placa, Marca, Modelo, Año, Km, Precio).");
-        return;
-    }
+        // cargarVehiculos();
 
-    vehiculos.push({ id: Date.now(), placa, marca, modelo, anio, km, color, precio, combustible, estado, titulo, descripcion, imagen });
-
-    cerrarModal();
-    aplicarFiltros();
-
-    [
-    "mPlaca", "mMarca","mModelo", "mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion"
-].forEach(id => document.getElementById(id).value = "");
-
-document.getElementById("mImagen").value = "";
-
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error al guardar vehículo");
+    });
 }
 
 renderVehiculos(vehiculos);

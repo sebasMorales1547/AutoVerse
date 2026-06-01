@@ -4,7 +4,7 @@
  */
 package CapaServicios;
 
-import CapaDao.Dao;
+import CapaDao.*;
 import CapaExcepciones.Excepciones;
 import CapaModelo.FiltroVehiculo;
 import CapaModelo.Publicaciones;
@@ -15,8 +15,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class PublicacionServicio {
-    private final Dao dao = new Dao();
 
+    private final PublicacionDao dao = new PublicacionDao();
   
     public void publicarVehiculo(Publicaciones pub, Vehiculos vehiculo) throws Excepciones, SQLException {
         if (!SesionActual.haySesionActiva())
