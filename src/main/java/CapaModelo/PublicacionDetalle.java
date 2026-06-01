@@ -7,6 +7,7 @@ public class PublicacionDetalle {
     private float precio;
     private String estado;
     private long cedula;
+    private String imagen;
 
     private String placa;
     private String marca;
@@ -15,6 +16,7 @@ public class PublicacionDetalle {
     private double kilometraje;
     private String color;
     private String combustible;
+    
 
     public int getIdPublicacion() { return idPublicacion; }
     public void setIdPublicacion(int idPublicacion) { this.idPublicacion = idPublicacion; }
@@ -33,6 +35,9 @@ public class PublicacionDetalle {
 
     public long getCedula() { return cedula; }
     public void setCedula(long cedula) { this.cedula = cedula; }
+
+    public String getImagen() { return imagen; }
+    public void setImagen(String imagen) { this.imagen = imagen; }
 
     public String getPlaca() { return placa; }
     public void setPlaca(String placa) { this.placa = placa; }

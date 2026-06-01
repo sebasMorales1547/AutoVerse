@@ -153,29 +153,41 @@ function cerrarModal(e) {
 function agregarVehiculo() {
     const get = id => document.getElementById(id).value.trim();
 
-    const data = {
-        placa:       get("mPlaca").toUpperCase(),
-        marca:       get("mMarca").toLowerCase(),
-        modelo:      get("mModelo"),
-        anio:        Number(get("mAnio")),
-        kilometraje: Number(get("mKm")),
-        color:       get("mColor"),
-        precio:      Number(get("mPrecio")),
-        combustible: document.getElementById("mCombustible").value,
-        estado:      document.getElementById("mEstado").value,
-        titulo:      get("mTitulo"),
-        descripcion: get("mDescripcion")
-    };
+    const placa       = get("mPlaca").toUpperCase();
+    const marca       = get("mMarca").toLowerCase();
+    const modelo      = get("mModelo");
+    const anio        = get("mAnio");
+    const km          = get("mKm");
+    const color       = get("mColor");
+    const precio      = get("mPrecio");
+    const combustible = document.getElementById("mCombustible").value;
+    const estado      = document.getElementById("mEstado").value;
+    const titulo      = get("mTitulo");
+    const descripcion = get("mDescripcion");
+    const imagen      = document.getElementById("mImagen").files[0];
 
-    if (!data.placa || !data.marca || !data.modelo || !data.anio || !data.kilometraje || !data.precio) {
-        alert("Por favor completa los campos obligatorios (Placa, Marca, Modelo, Año, Km, Precio).");
+    if (!placa || !marca || !modelo || !anio || !km || !precio) {
+        alert("Por favor completa los campos obligatorios.");
         return;
     }
 
+    const formData = new FormData();
+    formData.append("placa",       placa);
+    formData.append("marca",       marca);
+    formData.append("modelo",      modelo);
+    formData.append("anio",        anio);
+    formData.append("kilometraje", km);
+    formData.append("color",       color);
+    formData.append("precio",      precio);
+    formData.append("combustible", combustible);
+    formData.append("estado",      estado);
+    formData.append("titulo",      titulo);
+    formData.append("descripcion", descripcion);
+    if (imagen) formData.append("imagen", imagen);
+
     fetch("/api/publicaciones/crear", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: formData
     })
     .then(res => res.text())
     .then(() => {
@@ -184,6 +196,7 @@ function agregarVehiculo() {
         cargarVehiculos();
         ["mPlaca","mMarca","mModelo","mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion"]
             .forEach(id => document.getElementById(id).value = "");
+        document.getElementById("mImagen").value = "";
     })
     .catch(err => {
         console.error(err);

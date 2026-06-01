@@ -11,7 +11,8 @@ public class PublicacionDao{
     public List<PublicacionDetalle> listarDisponiblesDetalle() throws SQLException {
     List<PublicacionDetalle> lista = new ArrayList<>();
     String sql = "SELECT p.id_publicacion, p.titulo, p.descripcion, p.precio, p.estado, p.cedula, " +
-                 "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible " +
+                 "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible, " +
+                 "(SELECT f.url FROM FOTOS f WHERE f.id_publicacion = p.id_publicacion AND ROWNUM = 1) AS imagen " +
                  "FROM PUBLICACIONES p " +
                  "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
                  "WHERE p.estado = 'DISPONIBLE'";
@@ -35,6 +36,7 @@ public class PublicacionDao{
             d.setKilometraje(rs.getDouble("kilometraje"));
             d.setColor(rs.getString("color"));
             d.setCombustible(rs.getString("combustible"));
+            d.setImagen(rs.getString("imagen"));
             lista.add(d);
         }
     }
