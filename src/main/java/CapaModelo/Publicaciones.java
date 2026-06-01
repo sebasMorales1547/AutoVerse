@@ -11,6 +11,7 @@ public class Publicaciones {
     private float precio;
     private String estado;
     private int cedula;
+    private String tipo;
 
     public Publicaciones() {}
 
@@ -22,6 +23,9 @@ public class Publicaciones {
         this.estado = estado;
         this.cedula = cedula;
     }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
     public int getIdPublicacion() { return idPublicacion; }
     public void setIdPublicacion(int idPublicacion) { this.idPublicacion = idPublicacion; }

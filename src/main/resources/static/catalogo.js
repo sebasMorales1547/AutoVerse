@@ -150,6 +150,12 @@ function cerrarModal(e) {
     }
 }
 
+function toggleSubasta() {
+    const tipo = document.getElementById("mTipo").value;
+    const campos = document.getElementById("camposSubasta");
+    campos.style.display = tipo === "SUBASTA" ? "grid" : "none";
+}
+
 function agregarVehiculo() {
     const get = id => document.getElementById(id).value.trim();
 
@@ -165,9 +171,17 @@ function agregarVehiculo() {
     const titulo      = get("mTitulo");
     const descripcion = get("mDescripcion");
     const imagen      = document.getElementById("mImagen").files[0];
+    const tipo        = document.getElementById("mTipo").value;
+    const precioMin   = get("mPrecioMin");
+    const fechaLimite = get("mFechaLimite");
 
     if (!placa || !marca || !modelo || !anio || !km || !precio) {
         alert("Por favor completa los campos obligatorios.");
+        return;
+    }
+
+    if (tipo === "SUBASTA" && (!precioMin || !fechaLimite)) {
+        alert("Para una subasta debes ingresar precio mínimo y fecha límite.");
         return;
     }
 
@@ -183,7 +197,12 @@ function agregarVehiculo() {
     formData.append("estado",      estado);
     formData.append("titulo",      titulo);
     formData.append("descripcion", descripcion);
+    formData.append("tipo",        tipo);
     if (imagen) formData.append("imagen", imagen);
+    if (tipo === "SUBASTA") {
+        formData.append("precioMin",   precioMin);
+        formData.append("fechaLimite", fechaLimite);
+    }
 
     fetch("/api/publicaciones/crear", {
         method: "POST",
@@ -194,14 +213,17 @@ function agregarVehiculo() {
         alert("Vehículo guardado ✔");
         cerrarModal();
         cargarVehiculos();
-        ["mPlaca","mMarca","mModelo","mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion"]
+        ["mPlaca","mMarca","mModelo","mAnio","mKm","mColor","mPrecio","mTitulo","mDescripcion","mPrecioMin","mFechaLimite"]
             .forEach(id => document.getElementById(id).value = "");
         document.getElementById("mImagen").value = "";
+        document.getElementById("mTipo").value = "DIRECTA";
+        toggleSubasta();
     })
     .catch(err => {
         console.error(err);
         alert("Error al guardar vehículo");
     });
 }
+
 
 cargarVehiculos();
