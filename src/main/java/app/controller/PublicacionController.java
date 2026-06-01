@@ -73,7 +73,7 @@ public class PublicacionController {
                 oferta.setFechaLimite(Timestamp.valueOf(LocalDateTime.parse(fechaLimite.replace("T", "T").length() == 16 ? fechaLimite + ":00" : fechaLimite)));
                 oferta.setCedula(1067603644L);
                 oferta.setIdPublicacion(idPublicacion);
-                ofertaDao.crearOferta(oferta);
+                OfertaDao.crearOferta(oferta);
             }
 
             if (imagen != null && !imagen.isEmpty()) {

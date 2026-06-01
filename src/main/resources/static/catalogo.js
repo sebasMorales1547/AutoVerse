@@ -71,9 +71,112 @@ function renderVehiculos(lista) {
     });
 }
 
+let vehiculos = [];
+
+function cargarVehiculos() {
+    fetch("/api/publicaciones/disponibles")
+        .then(res => res.json())
+        .then(data => {
+            vehiculos = data;
+            renderVehiculos(vehiculos);
+        })
+        .catch(err => console.error("Error cargando vehículos:", err));
+}
+
+function formatPrecio(n) {
+    return "$" + Number(n).toLocaleString("es-CO");
+}
+
+function badgeEstado(estado) {
+    const colores = {
+        "Disponible": "#22c55e",
+        "Vendido":    "#ef4444",
+        "Reservado":  "#f59e0b"
+    };
+    const color = colores[estado] || "#888";
+    return `<span class="badge" style="background:${color}22; color:${color}; border:1px solid ${color}55">${estado}</span>`;
+}
+
+function renderVehiculos(lista) {
+    const grid  = document.getElementById("vehiclesGrid");
+    const empty = document.getElementById("emptyState");
+    grid.innerHTML = "";
+
+    if (lista.length === 0) {
+        empty.style.display = "flex";
+        return;
+    }
+    empty.style.display = "none";
+
+    lista.forEach((v, i) => {
+        const card = document.createElement("div");
+        card.className = "vehicle-card";
+        card.style.animationDelay = (i * 0.07) + "s";
+        card.innerHTML = `
+            <div class="card-img-wrap">
+                <img src="${v.imagen || ''}" alt="${v.marca} ${v.modelo}"
+                     onerror="this.src=''; this.parentElement.classList.add('no-img')"
+                     loading="lazy">
+                <div class="card-badge">${badgeEstado(v.estado)}</div>
+            </div>
+            <div class="card-body">
+                <p class="card-marca">${v.marca}</p>
+                <p class="card-modelo">${v.modelo}</p>
+                <p class="card-precio">${formatPrecio(v.precio)}</p>
+                <div class="card-specs">
+                    <span class="spec">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                        ${(v.kilometraje || 0).toLocaleString()} km
+                    </span>
+                    <span class="spec">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="9" height="15" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M15 7h2a2 2 0 010 4h-2" stroke="currentColor" stroke-width="1.5"/><path d="M9 18v2M12 18v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        ${v.combustible || ''}
+                    </span>
+                    <span class="spec">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 6V4M16 6V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.5"/></svg>
+                        ${v.anio || ''}
+                    </span>
+                </div>
+                <button class="btn-detalles" onclick="verDetalle(${v.idPublicacion})">Ver detalles →</button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
 function verDetalle(id) {
     const v = vehiculos.find(x => x.idPublicacion === id);
     if (!v) return;
+
+    const esSubasta = v.tipo === "SUBASTA";
+
+    let seccionAccion = "";
+    if (esSubasta) {
+        const fechaLimite = v.fechaLimite ? new Date(v.fechaLimite) : null;
+        const fechaStr = fechaLimite
+            ? `${fechaLimite.toLocaleDateString("es-CO")} ${fechaLimite.toLocaleTimeString("es-CO")}`
+            : "Sin fecha límite";
+
+        seccionAccion = `
+            <div class="detalle-accion">
+                <div class="subasta-info">
+                    <span class="subasta-label">Puja actual</span>
+                    <span class="subasta-monto">${formatPrecio(v.montoActual)}</span>
+                    <span class="subasta-limite">Cierra: ${fechaStr}</span>
+                </div>
+                <div class="subasta-input-wrap">
+                    <input type="number" id="inputPuja" placeholder="Tu oferta" class="input-puja">
+                    <button class="btn-pujar" onclick="pujar(${v.idPublicacion}, ${v.montoActual})">Pujar →</button>
+                </div>
+            </div>
+        `;
+    } else {
+        seccionAccion = `
+            <div class="detalle-accion">
+                <button class="btn-comprar" onclick="comprar(${v.idPublicacion})">Comprar ahora →</button>
+            </div>
+        `;
+    }
 
     document.getElementById("detallePanel").innerHTML = `
         <button class="detalle-cerrar" onclick="cerrarDetalle()">✕</button>
@@ -97,16 +200,63 @@ function verDetalle(id) {
                 <div class="dspec"><span class="dspec-label">Placa</span><span class="dspec-valor">${v.placa || ''}</span></div>
                 <div class="dspec"><span class="dspec-label">Marca</span><span class="dspec-valor" style="text-transform:capitalize">${v.marca}</span></div>
                 <div class="dspec"><span class="dspec-label">Modelo</span><span class="dspec-valor">${v.modelo}</span></div>
-                <div class="dspec"><span class="dspec-label">Año</span><span class="dspec-valor">${v.anio || v.año || ''}</span></div>
-                <div class="dspec"><span class="dspec-label">Kilometraje</span><span class="dspec-valor">${(v.km || v.kilometraje || 0).toLocaleString()} km</span></div>
+                <div class="dspec"><span class="dspec-label">Año</span><span class="dspec-valor">${v.anio || ''}</span></div>
+                <div class="dspec"><span class="dspec-label">Kilometraje</span><span class="dspec-valor">${(v.kilometraje || 0).toLocaleString()} km</span></div>
                 <div class="dspec"><span class="dspec-label">Color</span><span class="dspec-valor">${v.color || ''}</span></div>
                 <div class="dspec"><span class="dspec-label">Combustible</span><span class="dspec-valor">${v.combustible || ''}</span></div>
                 <div class="dspec"><span class="dspec-label">Estado</span><span class="dspec-valor">${v.estado}</span></div>
             </div>
+
+            <div class="detalle-divider"></div>
+
+            ${seccionAccion}
         </div>
     `;
 
     document.getElementById("detalleOverlay").classList.add("active");
+}
+
+function pujar(idPublicacion, montoActual) {
+    const monto = Number(document.getElementById("inputPuja").value);
+
+    if (!monto || monto <= montoActual) {
+        alert(`Tu puja debe ser mayor a ${formatPrecio(montoActual)}`);
+        return;
+    }
+
+    fetch("/api/ofertas/pujar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idPublicacion, monto, cedula: 1067603644 })
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        cerrarDetalle();
+        cargarVehiculos();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error al pujar");
+    });
+}
+
+function comprar(idPublicacion) {
+    fetch("/api/ofertas/comprar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idPublicacion, cedula: 1067603644 })
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        cerrarDetalle();
+        cargarVehiculos();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error al comprar");
+    });
 }
 
 function cerrarDetalle(e) {
@@ -124,7 +274,7 @@ function aplicarFiltros() {
     const resultado = vehiculos.filter(v => {
         const matchTexto = v.marca?.toLowerCase().includes(texto) || v.modelo?.toLowerCase().includes(texto);
         const matchMarca = !marca || v.marca === marca;
-        const matchAnio  = !anio  || (v.anio || v.año) === Number(anio);
+        const matchAnio  = !anio  || v.anio === Number(anio);
         let matchPrecio  = true;
         if (precioR) {
             const [min, max] = precioR.split("-").map(Number);
@@ -224,6 +374,5 @@ function agregarVehiculo() {
         alert("Error al guardar vehículo");
     });
 }
-
 
 cargarVehiculos();
