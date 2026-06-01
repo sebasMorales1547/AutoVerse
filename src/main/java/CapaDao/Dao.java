@@ -61,44 +61,47 @@ public class Dao {
     }
     
     public void crearPublicacion(Publicaciones pub, Vehiculos vehiculo) throws SQLException {
-        String sqlPub = "INSERT INTO PUBLICACIONES (titulo, descripcion, precio, estado, cedula) VALUES (?, ?, ?, 'DISPONIBLE', ?)";
-        String sqlVeh = "INSERT INTO VEHICULOS (id_publicacion, marca, modelo, año, kilometraje, gama, placa, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection con = Conexion.getConexion()) {
-            con.setAutoCommit(false);
-            try {
-                int idGenerado;
-                try (PreparedStatement ps = con.prepareStatement(sqlPub, Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, pub.getTitulo());
-                    ps.setString(2, pub.getDescripcion());
-                    ps.setFloat(3, pub.getPrecio());
-                    ps.setInt(4, (int) pub.getCedula());
-                    ps.executeUpdate();
+    String sqlPub = "INSERT INTO PUBLICACIONES (titulo, descripcion, precio, estado, cedula) " +
+                    "VALUES (?, ?, ?, 'DISPONIBLE', ?)";
 
-                    ResultSet keys = ps.getGeneratedKeys();
-                    if (!keys.next()) throw new SQLException("No se pudo obtener el ID de la publicación.");
-                    idGenerado = keys.getInt(1);
+    try (Connection con = Conexion.getConexion()) {
+
+        con.setAutoCommit(false);
+
+        try {
+
+            int idGenerado;
+
+            try (PreparedStatement ps = con.prepareStatement(sqlPub, Statement.RETURN_GENERATED_KEYS)) {
+
+                ps.setString(1, pub.getTitulo());
+                ps.setString(2, pub.getDescripcion());
+                ps.setFloat(3, pub.getPrecio());
+                ps.setInt(4, (int) pub.getCedula());
+
+                ps.executeUpdate();
+
+                ResultSet keys = ps.getGeneratedKeys();
+
+                if (!keys.next()) {
+                    throw new SQLException("No se pudo obtener el ID de la publicación.");
                 }
 
-                try (PreparedStatement psV = con.prepareStatement(sqlVeh)) {
-                    psV.setInt(1, idGenerado);
-                    psV.setString(2, vehiculo.getMarca());
-                    psV.setString(3, vehiculo.getModelo());
-                    psV.setDouble(4, vehiculo.getAño());
-                    psV.setDouble(5, vehiculo.getKilometraje());
-                    psV.setString(6, vehiculo.getGama());
-                    psV.setString(7, vehiculo.getPlaca());
-                    psV.setString(8, vehiculo.getColor());
-                    psV.executeUpdate();
-                }
-
-                con.commit();
-            } catch (SQLException e) {
-                con.rollback();
-                throw e;
+                idGenerado = keys.getInt(1);
             }
+
+            VehiculoDao vehiculoDao = new VehiculoDao();
+            vehiculoDao.insertarVehiculo(vehiculo, idGenerado);
+
+            con.commit();
+
+        } catch (SQLException e) {
+            con.rollback();
+            throw e;
         }
     }
+}
 
     public List<Publicaciones> listarPorVendedor(int cedula) throws SQLException {
         List<Publicaciones> lista = new ArrayList<>();
