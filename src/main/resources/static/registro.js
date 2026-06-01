@@ -58,4 +58,28 @@ document.getElementById("btnRegistro").addEventListener("click", () => {
 
     alert("Registro válido");
 
+    const usuario = {
+    cedula: parseInt(cedula),
+    nombre: nombre,
+    apellido: apellido,
+    correo: correo,
+    contrasena: contrasena,
+    telefono: telefono
+};
+
+fetch("http://localhost:8080/api/usuarios/registro", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(usuario)
+})
+.then(response => response.text())
+.then(data => {
+    alert(data);
+})
+.catch(error => {
+    console.error(error);
+    alert("Error al conectar con el servidor");
+});
 });
