@@ -47,31 +47,39 @@ public class UsuarioDao {
     }
 }
 
-    public Usuarios validarLogin(String user, String pass) throws SQLException {
-        String sql = "SELECT * FROM usuarios WHERE nombre_usuario = ? AND contrasena = ?";
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+    public Usuarios validarLogin(String correo, String pass) throws SQLException {
 
-            ps.setString(1, user);
-            ps.setString(2, hashContrasena(pass));
-            ResultSet rs = ps.executeQuery();
+    String sql = """
+        SELECT *
+        FROM usuarios
+        WHERE correo = ?
+        AND contrasena = ?
+    """;
 
-            if (rs.next()) {
-                Usuarios u = new Usuarios();
-                u.setCedula(rs.getInt("id"));
-                u.setNombre(rs.getString("nombre_usuario"));
-                u.setContrasena(rs.getString("contrasena"));
-                u.setCorreo(rs.getString("email"));
-                try {
-                    u.setRol(RolUsuario.valueOf(rs.getString("rol")));
-                } catch (SQLException e) {
-                    u.setRol(RolUsuario.COMPRADOR);
-                }
-                return u;
-            }
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, correo);
+        ps.setString(2, hashContrasena(pass));
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            Usuarios u = new Usuarios();
+
+            u.setCedula(rs.getInt("cedula"));
+            u.setNombre(rs.getString("nombre"));
+            u.setApellido(rs.getString("apellido"));
+            u.setCorreo(rs.getString("correo"));
+            u.setTelefono(rs.getString("telefono"));
+
+            return u;
         }
-        return null;
     }
+
+    return null;
+}
 
     public void actualizarRol(int cedula, RolUsuario nuevoRol) throws SQLException {
         String sql = "UPDATE usuarios SET rol = ? WHERE id = ?";
