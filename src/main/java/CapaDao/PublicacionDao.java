@@ -8,20 +8,38 @@ import java.util.List;
 
 public class PublicacionDao{
 
-    public List<Publicaciones> listarDisponibles() throws SQLException {
-        List<Publicaciones> lista = new ArrayList<>();
-        String sql = "SELECT * FROM PUBLICACIONES WHERE ESTADO = 'DISPONIBLE'";
+    public List<PublicacionDetalle> listarDisponiblesDetalle() throws SQLException {
+    List<PublicacionDetalle> lista = new ArrayList<>();
+    String sql = "SELECT p.id_publicacion, p.titulo, p.descripcion, p.precio, p.estado, p.cedula, " +
+                 "v.placa, v.marca, v.modelo, v.anio, v.kilometraje, v.color, v.combustible " +
+                 "FROM PUBLICACIONES p " +
+                 "JOIN VEHICULOS v ON p.id_publicacion = v.id_publicacion " +
+                 "WHERE p.estado = 'DISPONIBLE'";
 
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                lista.add(mapearPublicacion(rs));
-            }
+        while (rs.next()) {
+            PublicacionDetalle d = new PublicacionDetalle();
+            d.setIdPublicacion(rs.getInt("id_publicacion"));
+            d.setTitulo(rs.getString("titulo"));
+            d.setDescripcion(rs.getString("descripcion"));
+            d.setPrecio(rs.getFloat("precio"));
+            d.setEstado(rs.getString("estado"));
+            d.setCedula(rs.getLong("cedula"));
+            d.setPlaca(rs.getString("placa"));
+            d.setMarca(rs.getString("marca"));
+            d.setModelo(rs.getString("modelo"));
+            d.setAnio(rs.getInt("anio"));
+            d.setKilometraje(rs.getDouble("kilometraje"));
+            d.setColor(rs.getString("color"));
+            d.setCombustible(rs.getString("combustible"));
+            lista.add(d);
         }
-        return lista;
     }
+    return lista;
+}
 
     public List<Publicaciones> buscarConFiltros(FiltroVehiculo filtro) throws SQLException {
         List<Publicaciones> lista = new ArrayList<>();
