@@ -23,13 +23,13 @@ public class UsuarioServicio {
         }
 
         if (usuario.getNombre().length() < 4)
-          throw new Excepciones("El nombre debe tener al menos 4 caracteres.");
+            throw new Excepciones("El nombre debe tener al menos 4 caracteres.");
 
         if (usuario.getContrasena().length() < 8)
-          throw new Excepciones("La contraseña debe tener al menos 8 caracteres.");
+            throw new Excepciones("La contraseña debe tener al menos 8 caracteres.");
 
-         if (!usuario.getCorreo().contains("@"))
-             throw new Excepciones("El correo electrónico no es válido.");
+        if (!usuario.getCorreo().contains("@"))
+            throw new Excepciones("El correo electrónico no es válido.");
 
         usuarioDao.registrarUsuario(usuario);
     }
@@ -56,22 +56,24 @@ public class UsuarioServicio {
         usuarioDao.actualizarRol(cedulaObjetivo, nuevoRol);
     }
 
-    public void solicitarRecuperacion(String correo) throws Excepciones {
-        // Buscar usuario por correo en la base de datos...
-        // Se envia el codigo de forma directa...
+    public void solicitarRecuperacion(String correo)
+            throws Excepciones, SQLException {
+
+        if (!usuarioDao.existeCorreo(correo))
+            throw new Excepciones("No existe una cuenta registrada con ese correo.");
+
         notificacion.enviarCodigoRecuperacion(correo, "Usuario");
     }
 
     /**
      * @param correo
      * @param codigo
-     * @return 
+     * @return
      */
     public boolean verificarCodigoRecuperacion(String correo, String codigo) {
         return notificacion.verificarCodigoRecuperacion(correo, codigo);
     }
 
-   
     public void cambiarContrasena(String correo, String codigo, String nuevaContrasena)
             throws Excepciones, SQLException {
         if (nuevaContrasena.length() < 8)

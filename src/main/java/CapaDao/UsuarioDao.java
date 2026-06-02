@@ -97,7 +97,7 @@ public class UsuarioDao {
      * @throws java.sql.SQLException
      */
     public void actualizarContrasena(String correo, String nuevaContrasena) throws SQLException {
-        String sql = "UPDATE usuarios SET contrasena = ? WHERE email = ?";
+        String sql = "UPDATE usuarios SET contrasena = ? WHERE correo = ?";
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -106,4 +106,19 @@ public class UsuarioDao {
             ps.executeUpdate();
         }
     }
+
+    public boolean existeCorreo(String correo) throws SQLException {
+
+    String sql = "SELECT 1 FROM usuarios WHERE correo = ?";
+
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, correo);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            return rs.next();
+        }
+    }
+}
 }
