@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Contraseña - Autoverse</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="recuperar-container">
+
+        <h1>Recuperar contraseña</h1>
+
+        <p>
+            Ingresa tu correo electrónico y te enviaremos un código
+            para restablecer tu contraseña.
+        </p>
+
+        <input type="email" id="correo" placeholder="Correo electrónico">
+
+        <button onclick="solicitarCodigo()">
+            Enviar código
+        </button>
+
+        <input type="text" id="codigo" placeholder="Código recibido">
+
+        <input type="password" id="nuevaContrasena" placeholder="Nueva contraseña">
+
+        <button class="btn-secundario" onclick="cambiarContrasena()">
+            Cambiar contraseña
+        </button>
+
+        <div id="mensaje" class="mensaje"></div>
+
+    </div>
+
+    <script src="recuperar.js"></script>
+
+</body>
+
+</html>

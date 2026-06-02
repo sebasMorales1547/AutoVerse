@@ -824,3 +824,56 @@ body.dashboard-page {
     z-index: 2;
     backdrop-filter: blur(4px);
 }
+
+/* =========================================
+   RECUPERAR CONTRASEÑA
+   ========================================= */
+
+.recuperar-container {
+    width: 450px;
+    max-width: 95%;
+    background: #2b2b2b;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.recuperar-container h1 {
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.recuperar-container p {
+    color: #aaa;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.recuperar-container input {
+    margin-bottom: 15px;
+}
+
+.recuperar-container button {
+    margin-bottom: 15px;
+}
+
+.btn-secundario {
+    background: transparent;
+    border: 1px solid #ffc400;
+    color: #ffc400;
+    margin-top: 10px;
+}
+
+.btn-secundario:hover {
+    background: #ffc400;
+    color: #111;
+}
+
+.mensaje {
+    margin-top: 15px;
+    color: #ffc400;
+    font-size: 14px;
+    font-weight: bold;
+}

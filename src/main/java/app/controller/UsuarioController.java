@@ -44,6 +44,8 @@ public class UsuarioController {
     @PostMapping("/recuperar")
     public String recuperar(@RequestBody Map<String, String> body) {
 
+        System.out.println("ENTRO AL ENDPOINT RECUPERAR");
+
         try {
 
             usuarioServicio.solicitarRecuperacion(
@@ -53,6 +55,7 @@ public class UsuarioController {
 
         } catch (Exception e) {
 
+            e.printStackTrace();
             return e.getMessage();
         }
     }
@@ -66,8 +69,7 @@ public class UsuarioController {
             usuarioServicio.cambiarContrasena(
                     body.get("correo"),
                     body.get("codigo"),
-                    body.get("nuevaContrasena")
-            );
+                    body.get("nuevaContrasena"));
 
             return "Contraseña actualizada correctamente";
 
