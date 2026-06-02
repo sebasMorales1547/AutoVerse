@@ -91,7 +91,6 @@ function renderVehiculos(lista) {
         grid.appendChild(card);
     });
 
-    // Arrancar timers
     if (window._countdownInterval) clearInterval(window._countdownInterval);
     window._countdownInterval = setInterval(() => {
         vehiculos.forEach(v => {
@@ -139,7 +138,7 @@ function verDetalle(id) {
     } else {
         seccionAccion = `
             <div class="detalle-accion">
-                <button class="btn-comprar" onclick="comprar(${v.idPublicacion})">Comprar ahora →</button>
+                <button class="btn-comprar" onclick="irAPagos(${v.idPublicacion}, ${v.precio})">Comprar ahora →</button>
             </div>
         `;
     }
@@ -176,6 +175,13 @@ function verDetalle(id) {
     document.getElementById("detalleOverlay").classList.add("active");
 }
 
+// NUEVO: guarda los datos y redirige a pagos.html
+function irAPagos(idPublicacion, precio) {
+    sessionStorage.setItem('idPublicacion', idPublicacion);
+    sessionStorage.setItem('montoVehiculo', precio);
+    window.location.href = 'pagos.html';
+}
+
 function pujar(idPublicacion, montoActual) {
     const monto = Number(document.getElementById("inputPuja").value);
     if (!monto || monto <= montoActual) {
@@ -190,17 +196,6 @@ function pujar(idPublicacion, montoActual) {
     .then(res => res.text())
     .then(msg => { alert(msg); cerrarDetalle(); cargarVehiculos(); })
     .catch(() => alert("Error al pujar"));
-}
-
-function comprar(idPublicacion) {
-    fetch("/api/ofertas/comprar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idPublicacion, cedula: cedulaUsuario })
-    })
-    .then(res => res.text())
-    .then(msg => { alert(msg); cerrarDetalle(); cargarVehiculos(); })
-    .catch(() => alert("Error al comprar"));
 }
 
 function cerrarDetalle(e) {
