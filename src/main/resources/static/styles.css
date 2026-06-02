@@ -877,3 +877,86 @@ body.dashboard-page {
     font-size: 14px;
     font-weight: bold;
 }
+
+.pago-wrap {
+    max-width: 620px;
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+.pago-titulo { font-size: 12px; font-weight: 600; color: #888; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
+.pago-subtitulo { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 1.75rem; }
+.pago-seccion-label { font-size: 11px; font-weight: 600; color: #aaa; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .75rem; }
+ 
+.pago-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+ 
+.pago-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    position: relative;
+}
+.pago-card:hover { border-color: #ccc; background: #fafafa; }
+.pago-card.activo { border: 2px solid #2563eb; background: #eff6ff; }
+.pago-card.activo .pago-nombre { color: #2563eb; }
+ 
+.pago-tick {
+    position: absolute; top: 8px; right: 8px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #2563eb; display: none;
+    align-items: center; justify-content: center;
+    color: #fff; font-size: 10px;
+}
+.pago-card.activo .pago-tick { display: flex; }
+ 
+.pago-logo {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+}
+.logo-stripe  { background: #635BFF; color: #fff; }
+.logo-wompi   { background: #00C853; color: #fff; }
+.logo-epayco  { background: #FF6B35; color: #fff; }
+.logo-efectivo{ background: #dcfce7; color: #16a34a; font-size: 18px; }
+.logo-debito  { background: #f1f5f9; color: #64748b; font-size: 18px; }
+.logo-credito { background: #fef9c3; color: #ca8a04; font-size: 18px; }
+ 
+.pago-nombre { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.pago-desc   { font-size: 11px; color: #888; line-height: 1.4; }
+.pago-badge  { font-size: 10px; background: #f4f4f4; color: #888; padding: 2px 6px; border-radius: 4px; border: 1px solid #e8e8e8; }
+ 
+.pago-divider { height: 1px; background: #f0f0f0; margin: 1.25rem 0; }
+ 
+.pago-resumen {
+    background: #f9f9f7; border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.pago-res-label  { font-size: 12px; color: #888; margin-bottom: 2px; }
+.pago-res-metodo { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.pago-res-monto  { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+ 
+.pago-btn {
+    width: 100%; padding: .9rem;
+    background: #1a1a1a; color: #fff;
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: opacity .15s;
+}
+.pago-btn:hover { opacity: .85; }
+.pago-btn:disabled { opacity: .3; cursor: not-allowed; }

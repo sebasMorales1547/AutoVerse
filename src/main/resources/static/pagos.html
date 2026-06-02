@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago — Autoverse</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<div class="pago-wrap">
+    <p class="pago-titulo">Autoverse</p>
+    <p class="pago-subtitulo">Elige cómo pagar</p>
+
+    <!-- PASARELAS EXTERNAS -->
+    <p class="pago-seccion-label">Pasarelas externas</p>
+    <div class="pago-grid">
+
+        <div class="pago-card" onclick="seleccionar(this, 'Stripe', 'stripe')">
+            <div class="pago-tick"><i class="ti ti-check"></i></div>
+            <div class="pago-logo logo-stripe">St</div>
+            <p class="pago-nombre">Stripe</p>
+            <p class="pago-desc">Tarjeta internacional</p>
+            <span class="pago-badge">Externo</span>
+        </div>
+
+        <div class="pago-card" onclick="seleccionar(this, 'Wompi', 'wompi')">
+            <div class="pago-tick"><i class="ti ti-check"></i></div>
+            <div class="pago-logo logo-wompi">Wp</div>
+            <p class="pago-nombre">Wompi</p>
+            <p class="pago-desc">PSE · Nequi · Bancolombia</p>
+            <span class="pago-badge">Externo</span>
+        </div>
+
+        <div class="pago-card" onclick="seleccionar(this, 'ePayco', 'epayco')">
+            <div class="pago-tick"><i class="ti ti-check"></i></div>
+            <div class="pago-logo logo-epayco">eP</div>
+            <p class="pago-nombre">ePayco</p>
+            <p class="pago-desc">Débito · Crédito · PSE</p>
+            <span class="pago-badge">Externo</span>
+        </div>
+
+    </div>
+
+    <div class="pago-divider"></div>
+
+    <!-- PAGO DIRECTO -->
+    <p class="pago-seccion-label">Pago directo</p>
+    <div class="pago-grid">
+
+        <div class="pago-card" onclick="seleccionar(this, 'Efectivo', 'efectivo')">
+            <div class="pago-tick"><i class="ti ti-check"></i></div>
+            <div class="pago-logo logo-efectivo"><i class="ti ti-cash"></i></div>
+            <p class="pago-nombre">Efectivo</p>
+            <p class="pago-desc">Pago presencial</p>
+        </div>
+
+        <div class="pago-card" onclick="seleccionar(this, 'Tarjeta débito', 'debito')">
+            <div class="pago-tick"><i class="ti ti-check"></i></div>
+            <div class="pago-logo logo-debito"><i class="ti ti-credit-card"></i></div>
+            <p class="pago-nombre">Débito</p>
+            <p class="pago-desc">Tarjeta débito</p>
+        </div>
+
+        <div class="pago-card" onclick="seleccionar(this, 'Tarjeta crédito', 'credito')">
+            <div class="pago-tick"><i class="ti ti-check"></i></div>
+            <div class="pago-logo logo-credito"><i class="ti ti-credit-card"></i></div>
+            <p class="pago-nombre">Crédito</p>
+            <p class="pago-desc">Tarjeta crédito</p>
+        </div>
+
+    </div>
+
+    <div class="pago-divider"></div>
+
+    <!-- RESUMEN -->
+    <div class="pago-resumen">
+        <div>
+            <p class="pago-res-label">Método seleccionado</p>
+            <p class="pago-res-metodo" id="metodo-txt">Ninguno</p>
+        </div>
+        <p class="pago-res-monto" id="monto-txt">$0</p>
+    </div>
+
+    <button class="pago-btn" id="btn-pagar" disabled onclick="pagar()">
+        Continuar con el pago
+    </button>
+</div>
+
+<script src="pagos.js"></script>
+</body>
+</html>
