@@ -810,3 +810,17 @@ body.dashboard-page {
 @media (max-width: 480px) {
     .vehicles-grid { grid-template-columns: 1fr; }
 }
+
+.card-countdown {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #00000099;
+    color: #ffc400;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 2;
+    backdrop-filter: blur(4px);
+}

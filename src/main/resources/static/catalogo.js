@@ -24,12 +24,24 @@ function formatPrecio(n) {
 
 function badgeEstado(estado) {
     const colores = {
-        "Disponible": "#22c55e",
-        "Vendido":    "#ef4444",
-        "Reservado":  "#f59e0b"
+        "DISPONIBLE": "#22c55e",
+        "VENDIDO":    "#ef4444",
+        "RESERVADO":  "#f59e0b"
     };
     const color = colores[estado] || "#888";
     return `<span class="badge" style="background:${color}22; color:${color}; border:1px solid ${color}55">${estado}</span>`;
+}
+
+function calcularCountdown(fechaLimite) {
+    if (!fechaLimite) return null;
+    const diff = new Date(fechaLimite) - new Date();
+    if (diff <= 0) return "Expirada";
+    const dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const segs  = Math.floor((diff % (1000 * 60)) / 1000);
+    if (dias > 0) return `${dias}d ${horas}h ${mins}m`;
+    return `${horas}h ${mins}m ${segs}s`;
 }
 
 function renderVehiculos(lista) {
@@ -49,6 +61,7 @@ function renderVehiculos(lista) {
         card.style.animationDelay = (i * 0.07) + "s";
         card.innerHTML = `
             <div class="card-img-wrap">
+                ${v.tipo === 'SUBASTA' ? `<div class="card-countdown" id="cd-${v.idPublicacion}">⏱ ...</div>` : ''}
                 <img src="${v.imagen || ''}" alt="${v.marca} ${v.modelo}"
                      onerror="this.src=''; this.parentElement.classList.add('no-img')"
                      loading="lazy">
@@ -77,6 +90,24 @@ function renderVehiculos(lista) {
         `;
         grid.appendChild(card);
     });
+
+    // Arrancar timers
+    if (window._countdownInterval) clearInterval(window._countdownInterval);
+    window._countdownInterval = setInterval(() => {
+        vehiculos.forEach(v => {
+            if (v.tipo !== 'SUBASTA') return;
+            const el = document.getElementById(`cd-${v.idPublicacion}`);
+            if (!el) return;
+            const texto = calcularCountdown(v.fechaLimite);
+            if (texto === "Expirada") {
+                el.textContent = "⏱ Subasta cerrada";
+                el.style.background = "#ef444488";
+                el.style.color = "#fff";
+            } else {
+                el.textContent = "⏱ " + texto;
+            }
+        });
+    }, 1000);
 }
 
 function verDetalle(id) {
@@ -147,12 +178,10 @@ function verDetalle(id) {
 
 function pujar(idPublicacion, montoActual) {
     const monto = Number(document.getElementById("inputPuja").value);
-
     if (!monto || monto <= montoActual) {
         alert(`Tu puja debe ser mayor a ${formatPrecio(montoActual)}`);
         return;
     }
-
     fetch("/api/ofertas/pujar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

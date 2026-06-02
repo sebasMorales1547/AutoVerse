@@ -91,8 +91,8 @@ public class PublicacionDao{
     }
 
    public int crearPublicacion(Publicaciones pub) throws SQLException {
-    String sql = "INSERT INTO PUBLICACIONES (id_publicacion, titulo, descripcion, precio, estado, cedula) " +
-                 "VALUES (seq_publicacion.NEXTVAL, ?, ?, ?, 'DISPONIBLE', ?)";
+    String sql = "INSERT INTO PUBLICACIONES (id_publicacion, titulo, descripcion, precio, estado, cedula, tipo) " +
+                 "VALUES (seq_publicacion.NEXTVAL, ?, ?, ?, 'DISPONIBLE', ?, ?)";
 
     try (Connection con = Conexion.getConexion();
          PreparedStatement ps = con.prepareStatement(sql, new String[]{"ID_PUBLICACION"})) {
@@ -101,11 +101,7 @@ public class PublicacionDao{
         ps.setString(2, pub.getDescripcion());
         ps.setFloat(3, pub.getPrecio());
         ps.setLong(4, pub.getCedula());
-
-        // ← aquí
-        System.out.println("=== URL conexion: " + con.getMetaData().getURL());
-        System.out.println("=== Usuario conexion: " + con.getMetaData().getUserName());
-        System.out.println("=== Cedula a insertar: " + pub.getCedula());
+        ps.setString(5, pub.getTipo());
 
         ps.executeUpdate();
 
