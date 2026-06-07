@@ -11,10 +11,9 @@
 
 <div class="pago-wrap">
     <p class="pago-titulo">Autoverse</p>
-    <p class="pago-subtitulo">Elige cómo pagar</p>
+    <p class="pago-subtitulo">Elige tu pasarela de pago</p>
 
     <!-- PASARELAS EXTERNAS -->
-    <p class="pago-seccion-label">Pasarelas externas</p>
     <div class="pago-grid">
 
         <div class="pago-card" onclick="seleccionar(this, 'Stripe', 'stripe')">
@@ -39,35 +38,6 @@
             <p class="pago-nombre">ePayco</p>
             <p class="pago-desc">Débito · Crédito · PSE</p>
             <span class="pago-badge">Externo</span>
-        </div>
-
-    </div>
-
-    <div class="pago-divider"></div>
-
-    <!-- PAGO DIRECTO -->
-    <p class="pago-seccion-label">Pago directo</p>
-    <div class="pago-grid">
-
-        <div class="pago-card" onclick="seleccionar(this, 'Efectivo', 'efectivo')">
-            <div class="pago-tick"><i class="ti ti-check"></i></div>
-            <div class="pago-logo logo-efectivo"><i class="ti ti-cash"></i></div>
-            <p class="pago-nombre">Efectivo</p>
-            <p class="pago-desc">Pago presencial</p>
-        </div>
-
-        <div class="pago-card" onclick="seleccionar(this, 'Tarjeta débito', 'debito')">
-            <div class="pago-tick"><i class="ti ti-check"></i></div>
-            <div class="pago-logo logo-debito"><i class="ti ti-credit-card"></i></div>
-            <p class="pago-nombre">Débito</p>
-            <p class="pago-desc">Tarjeta débito</p>
-        </div>
-
-        <div class="pago-card" onclick="seleccionar(this, 'Tarjeta crédito', 'credito')">
-            <div class="pago-tick"><i class="ti ti-check"></i></div>
-            <div class="pago-logo logo-credito"><i class="ti ti-credit-card"></i></div>
-            <p class="pago-nombre">Crédito</p>
-            <p class="pago-desc">Tarjeta crédito</p>
         </div>
 
     </div>

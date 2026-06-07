@@ -90,7 +90,28 @@ public class PublicacionDao{
         return lista;
     }
 
+    public boolean existeCedula(long cedula) throws SQLException {
+
+    String sql = "SELECT 1 FROM usuarios WHERE cedula = ?";
+
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setLong(1, cedula);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            return rs.next();
+        }
+    }
+}
+
    public int crearPublicacion(Publicaciones pub) throws SQLException {
+
+    // ✔ VALIDACIÓN IMPORTANTE
+    if (!existeCedula(pub.getCedula())) {
+        throw new SQLException("El usuario no existe (cedula inválida)");
+    }
+
     String sql = "INSERT INTO PUBLICACIONES (id_publicacion, titulo, descripcion, precio, estado, cedula, tipo) " +
                  "VALUES (seq_publicacion.NEXTVAL, ?, ?, ?, 'DISPONIBLE', ?, ?)";
 

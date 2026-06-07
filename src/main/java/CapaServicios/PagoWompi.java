@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 
 public class PagoWompi implements MetodoPago {
    
-    private final String LINK_WOMPI = "https://checkout.wompi.co/l/test_VPOS_1IcxE5";
+    private final String LINK_WOMPI = "https://checkout.wompi.co/l/VPOS_wRaEQ1";
 
     @Override
     public String prepararPasarela(double monto, String descripcion) {
