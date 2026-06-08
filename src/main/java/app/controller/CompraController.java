@@ -1,6 +1,7 @@
 package app.controller;
 
 import CapaServicios.OfertaService;
+import java.sql.SQLException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +21,8 @@ public class CompraController {
 
             return "Compra realizada correctamente";
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
 
-            e.printStackTrace();
             return e.getMessage();
         }
     }
