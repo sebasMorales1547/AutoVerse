@@ -175,11 +175,12 @@ function verDetalle(id) {
     document.getElementById("detalleOverlay").classList.add("active");
 }
 
-// NUEVO: guarda los datos y redirige a pagos.html
+// Guarda datos y va a verificación biométrica antes de pagar
 function irAPagos(idPublicacion, precio) {
     sessionStorage.setItem('idPublicacion', idPublicacion);
     sessionStorage.setItem('montoVehiculo', precio);
-    window.location.href = 'pagos.html';
+    sessionStorage.removeItem('biometriaVerificada');
+    window.location.href = 'biometria.html';
 }
 
 function pujar(idPublicacion, montoActual) {
