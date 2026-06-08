@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>AutoVerse Crear cuenta</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- face-api para extraer descriptor al registrarse -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
-
 <body class="register-page">
 
 <div class="container wide">
 
-   <!-- Lado izquierdo: branding -->
-<div class="branding">
-    <img src="Logo.png" alt="AutoVerse" class="logo-img">
-</div>
+    <!-- Branding -->
+    <div class="branding">
+        <img src="Logo.png" alt="AutoVerse" class="logo-img">
+    </div>
 
-    <!-- Lado derecho: formulario -->
+    <!-- Formulario -->
     <div class="register-form">
 
         <div class="form-row">
@@ -52,6 +52,16 @@
             </div>
         </div>
 
+        <!-- FOTO BIOMÉTRICA -->
+        <div class="form-group full-width">
+            <label>📷 Foto de tu rostro <span style="color:#888;font-size:12px">(para verificación biométrica al comprar)</span></label>
+            <input type="file" id="foto" accept="image/*" onchange="previsualizarFoto(this)">
+            <div id="fotoPreview" style="display:none;margin-top:.75rem">
+                <img id="imgPreview" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid #ffc400">
+                <p style="font-size:12px;color:#888;margin-top:.25rem">Vista previa</p>
+            </div>
+        </div>
+
         <button type="button" id="btnRegistro">Crear cuenta</button>
 
         <p class="register">
@@ -59,10 +69,20 @@
         </p>
 
     </div>
-
 </div>
 
+<script>
+function previsualizarFoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('imgPreview').src = e.target.result;
+            document.getElementById('fotoPreview').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 <script src="registro.js"></script>
-
 </body>
 </html>
