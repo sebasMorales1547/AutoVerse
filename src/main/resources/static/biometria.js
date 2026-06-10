@@ -16,7 +16,7 @@ const scanLine   = document.getElementById('scanLine');
 
 // ── 1. Cargar modelos de face-api.js ────────────────
 // Los modelos se sirven desde una CDN pública
-const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights';
+const MODEL_URL = '/weights';
 
 async function iniciar() {
     setEstado('Cargando modelos de reconocimiento...', true);
